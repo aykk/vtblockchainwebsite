@@ -306,25 +306,25 @@ export default function Home() {
 
   const projects = [
     {
-      title: "Protocol Pulse",
+      title: "Mainstreet Dune",
       description:
-        "Analytics dashboard tracking liquidity, swaps, and protocol performance.",
-      website: "https://example.com/protocol-pulse",
-      repo: "https://github.com/vt-blockchain/protocol-pulse",
+        "Analytics dashboard tracking over $40 million dollars in assets, updated daily.",
+      website: "https://dune.com/jungt/mainstreet",
+      repo: "https://github.com/Ungter/Mainstreet_DUNE",
     },
     {
-      title: "Hokie Wallet Lab",
+      title: "Aerostrategy",
       description:
-        "Educational wallet sandbox for onboarding students to self-custody.",
-      website: "https://example.com/hokie-wallet",
-      repo: "https://github.com/vt-blockchain/hokie-wallet-lab",
+        "veAERO accumulator engine",
+      website: "https://www.aerostrategy.finance/",
+      repo: "https://aerostrategy.gitbook.io/docs/getting-started/technical-documentation/contracts",
     },
     {
-      title: "Maroon Vault",
+      title: "MEV Uniswap Fee Extractor",
       description:
-        "Experimenting with DeFi strategy tooling for research and simulation.",
-      website: "https://example.com/maroon-vault",
-      repo: "https://github.com/vt-blockchain/maroon-vault",
+        "Atomic extraction of Uniswap pool fees on ETH using flashloans.",
+      website: "https://github.com/Ungter/UniswapUNIGulper",
+      repo: "https://github.com/Ungter/UniswapUNIGulper",
     },
   ];
 
@@ -505,10 +505,10 @@ export default function Home() {
                 <h3 className="text-xl font-medium text-[#22131a]">{project.title}</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-(--muted)">{project.description}</p>
                 <div className="mt-6 flex gap-3 text-sm font-semibold">
-                  <a className="btn-brutal btn-orange" href={project.website}>
+                  <a className="btn-brutal btn-orange" href={project.website} target="_blank" rel="noopener noreferrer">
                     [Website]
                   </a>
-                  <a className="btn-brutal btn-ghost" href={project.repo}>
+                  <a className="btn-brutal btn-ghost" href={project.repo} target="_blank" rel="noopener noreferrer">
                     [GitHub]
                   </a>
                 </div>
