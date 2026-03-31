@@ -156,6 +156,42 @@ html {
   left: -50%;
 }
 
+.btn-swipe-maroon {
+  background: #a40038;
+  color: #fff;
+  border: 1px solid #a40038;
+}
+
+.btn-swipe-maroon::before {
+  background: #fff;
+}
+
+.btn-swipe-maroon:hover {
+  color: #a40038;
+}
+
+.btn-swipe-maroon:hover::before {
+  left: -50%;
+}
+
+.btn-swipe-maroon {
+  background: #a40038;
+  color: #fff;
+  border: 1px solid #a40038;
+}
+
+.btn-swipe-maroon::before {
+  background: #fff;
+}
+
+.btn-swipe-maroon:hover {
+  color: #a40038;
+}
+
+.btn-swipe-maroon:hover::before {
+  left: -50%;
+}
+
 .btn-swipe-ghost {
   background: rgba(255, 255, 255, 0.88);
   color: var(--brand-maroon);

@@ -408,10 +408,10 @@ export default function Home() {
               STUDENT COLLECTIVE BUILDING A HARD PIPELINE INTO WEB3: DEVELOPMENT, DEFI, RESEARCH, AND SHIP-FAST EXPERIMENTATION.
             </p>
             <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-4">
-              <a href="#projects" className="btn-brutal btn-maroon">
+              <a href="#projects" className="btn-swipe btn-swipe-maroon">
                 [LEARN MORE]
               </a>
-              <a href="#leadership" className="btn-brutal btn-orange">
+              <a href="#leadership" className="btn-swipe btn-swipe-orange">
                 [ABOUT US]
               </a>
             </div>
