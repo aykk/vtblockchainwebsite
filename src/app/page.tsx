@@ -356,11 +356,11 @@ export default function Home() {
 
   const projects = [
     {
-      title: "Protocol Pulse",
+      title: "Mainstreet Dune",
       description:
-        "Analytics dashboard tracking liquidity, swaps, and protocol performance.",
-      website: "https://example.com/protocol-pulse",
-      repo: "https://github.com/vt-blockchain/protocol-pulse",
+        "Analytics dashboard tracking over $40 million dollars in assets, updated daily.",
+      website: "https://dune.com/jungt/mainstreet",
+      repo: "https://github.com/Ungter/Mainstreet_DUNE",
     },
     {
       title: "Hokie Wallet Lab",
