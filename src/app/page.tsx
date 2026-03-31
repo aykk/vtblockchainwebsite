@@ -339,34 +339,35 @@ export default function Home() {
     <div className="relative overflow-hidden pb-24">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(206,76,0,0.12),transparent_35%),radial-gradient(circle_at_85%_18%,rgba(134,31,65,0.12),transparent_34%),radial-gradient(circle_at_60%_65%,rgba(124,24,44,0.09),transparent_42%)]" />
 
-      <header className="sticky top-0 z-40 border-b border-(--line) bg-[rgba(255,255,255,0.96)] backdrop-blur">
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-3 md:px-10 lg:px-14">
+      <header className="sticky top-0 z-40 border-b border-(--line)/1 bg-transparent">
+        <nav className="mx-auto flex w-full max-w-6xl items-center bg-transparent justify-between px-6 py-3 md:px-10 lg:px-14">
           <a href="#" className="nav-brand pointer-events-auto">
             VT Blockchain
           </a>
 
-          <div className="hidden items-center gap-3 sm:flex">
-            <a className="nav-link pointer-events-auto" href="#impact">
-              Impact
-            </a>
-            <a className="nav-link pointer-events-auto" href="#travel">
-              Travel
-            </a>
-            <a className="nav-link pointer-events-auto" href="#projects">
-              Projects
-            </a>
-            <a className="nav-link pointer-events-auto" href="#leadership">
-              Team
+          <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-3 sm:flex">
+              <a className="nav-link pointer-events-auto" href="#impact">
+                Impact
+              </a>
+              <a className="nav-link pointer-events-auto" href="#travel">
+                Travel
+              </a>
+              <a className="nav-link pointer-events-auto" href="#projects">
+                Projects
+              </a>
+              <a className="nav-link pointer-events-auto" href="#leadership">
+                Team
+              </a>
+            </div>
+            <a href="#leadership" className="btn-brutal btn-maroon pointer-events-auto ml-2">
+              Join Us
             </a>
           </div>
-
-          <a href="#leadership" className="btn-brutal btn-maroon pointer-events-auto">
-            Join Us
-          </a>
         </nav>
       </header>
 
-      <section className="relative h-[calc(100vh-3.5rem)] overflow-hidden bg-white">
+      <section className="relative h-[calc(100vh-3.5rem)] overflow-hidden bg-transparent">
         <BitcoinBackground />
         <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_20%_20%,rgba(206,76,0,0.07),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(134,31,65,0.08),transparent_42%)]" />
 
@@ -393,8 +394,13 @@ export default function Home() {
                 <span className="block font-[Georgia,Times,serif] text-[clamp(1rem,2.1vw,1.5rem)] font-normal tracking-[0.08em] text-[rgba(134,31,65,0.9)]">
                   <FuzzyText text="Virginia Tech" scrambleSpeed={40} revealDuration={1200} />
                 </span>
-                <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight text-transparent bg-linear-to-r from-(--brand-maroon) via-(--brand-orange) to-(--brand-orange) bg-clip-text drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]">
-                  <FuzzyText text="Blockchain" scrambleSpeed={40} revealDuration={1500} />
+                <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]" style={{ fontFamily: "var(--font-neco), sans-serif" }}>
+                  <span className="text-(--brand-maroon)">
+                    <FuzzyText text="Block" scrambleSpeed={40} revealDuration={1500} />
+                  </span>
+                  <span className="text-(--brand-orange)">
+                    <FuzzyText text="chain" scrambleSpeed={40} revealDuration={1500} />
+                  </span>
                 </span>
               </h1>
             </div>
