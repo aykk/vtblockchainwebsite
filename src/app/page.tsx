@@ -227,6 +227,53 @@ function AnimatedNumber({
   );
 }
 
+function AnimatedUnderline({
+  children,
+  className = "",
+  duration = 800,
+  delay = 200,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  duration?: number;
+  delay?: number;
+}) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <span ref={ref} className={`relative inline-block ${className}`}>
+      {children}
+      <span
+        className="absolute bottom-0 left-0 h-[2px] bg-current"
+        style={{
+          width: isVisible ? "100%" : "0%",
+          transition: `width ${duration}ms ease-out ${delay}ms`,
+        }}
+      />
+    </span>
+  );
+}
+
 export default function Home() {
   const partners = [
     { name: "Avalanche", logo: "/avalanche-avax-logo.svg" },
@@ -425,13 +472,13 @@ export default function Home() {
           ))}
         </section>
 
-        <section className="section-shell border-none bg-linear-to-r from-[rgba(134,31,65,0.94)] to-[rgba(206,76,0,0.92)] p-8 text-white md:p-10">
+        <section className="section-shell border-none !bg-linear-to-r from-[rgba(134,31,65,0.94)] to-[rgba(206,76,0,0.92)] p-8 text-white md:p-10">
           <p className="text-xs uppercase tracking-[0.2em] text-white/80">Our mission</p>
           <h2 className="mt-3 max-w-3xl text-3xl font-medium leading-tight text-white md:text-4xl">
-            Build the strongest student career pipeline into web3.
+            Build the strongest student career pipeline into <span className="bg-white px-1 py-0.5 text-[var(--brand-maroon)]">web3</span>.
           </h2>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-white/90">
-            We mentor developers, DeFi researchers, designers, and curious newcomers. Whether you are writing smart contracts or chasing alpha as a proud degen, we turn curiosity into shipping.
+            We mentor developers, DeFi researchers, designers, and curious newcomers. Whether you are writing smart contracts or chasing alpha as a proud degen, we turn <AnimatedUnderline className="text-white">curiosity into action</AnimatedUnderline>.
           </p>
         </section>
 
@@ -441,7 +488,7 @@ export default function Home() {
               <p className="section-kicker">Projects</p>
               <h2 className="section-title">Data Analysis, MEV, etc.</h2>
             </div>
-            <p className="max-w-sm text-sm text-(--muted)">Built by members and published for portfolio-ready <strong>proof of work.</strong></p>
+            <p className="max-w-sm text-sm text-(--muted)">Built by members and published for portfolio-ready <strong>PoW.</strong></p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {projects.map((project) => (
@@ -465,7 +512,7 @@ export default function Home() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
             <div>
               <p className="section-kicker">Leadership</p>
-              <h2 className="section-title">Leadership team</h2>
+              <h2 className="section-title">Meet the team</h2>
             </div>
             <p className="text-sm text-(--muted)">4 officers currently leading VT Blockchain.</p>
           </div>
