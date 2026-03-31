@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import katex from "katex";
+import "katex/dist/katex.min.css";
 
 // Random generators for dynamic noise text
 function randomHex(length: number): string {
@@ -408,7 +409,7 @@ export default function BitcoinBackground() {
   const renderContent = (text: string) => {
     const isLatex = text.includes("\\") || text.includes("^{") || text.includes("_{") || text.includes("\\frac");
     if (isLatex) {
-      return { __html: katex.renderToString(text, { throwOnError: false, output: "html" }) };
+      return { __html: katex.renderToString(text, { throwOnError: false, output: "html", displayMode: true }) };
     }
     return undefined;
   };
