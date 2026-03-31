@@ -443,7 +443,10 @@ export default function Home() {
           </div>
           <div className="mt-6 border-t border-(--line) pt-6">
             <p className="text-5xl font-medium text-(--brand-maroon) md:text-6xl">
-              <AnimatedNumber value={8.55} prefix="$" suffix="m" decimals={2} />
+              <AnimatedNumber value={8.55} prefix="$" suffix="m+" decimals={2} />
+            </p>
+            <p className="mt-1 text-sm text-(--brand-maroon)/60">
+              Cumulative on-chain volume
             </p>
           </div>
           <div className="mt-7 grid grid-cols-2 gap-3 md:max-w-lg">
