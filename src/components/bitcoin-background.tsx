@@ -89,7 +89,7 @@ const cryptoGenerators = [
 ];
 
 const structuralNoise = ["+", "−", "||", "::", "{ }", "[ ]", "Σ", "∫", "⇒", "0x", "11", "π", "Δ"];
-const BACKGROUND_UPSHIFT_PERCENT = 6;
+const BACKGROUND_UPSHIFT_PERCENT = 2;
 
 const extendedCryptoNoise = [
   () => "ECDSA(secp256k1)",

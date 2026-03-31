@@ -3,6 +3,132 @@
 import { useEffect, useRef, useState } from "react";
 import BitcoinBackground from "@/components/bitcoin-background";
 
+function FuzzyText({
+  text,
+  className = "",
+  scrambleSpeed = 50,
+  revealDuration = 1500,
+}: {
+  text: string;
+  className?: string;
+  scrambleSpeed?: number;
+  revealDuration?: number;
+}) {
+  const [displayText, setDisplayText] = useState("");
+  const [hasStarted, setHasStarted] = useState(false);
+  const [opacity, setOpacity] = useState(0);
+  const isRevealedRef = useRef(false);
+  const revealedIndicesRef = useRef<Set<number>>(new Set());
+  const ref = useRef<HTMLSpanElement>(null);
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStarted) {
+            setHasStarted(true);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+
+    // Reset state for fresh animation
+    isRevealedRef.current = false;
+    revealedIndicesRef.current.clear();
+    setDisplayText("");
+
+    setOpacity(1);
+
+    // Get indices of non-space characters
+    const charIndices: number[] = [];
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] !== " ") {
+        charIndices.push(i);
+      }
+    }
+
+    // Shuffle the indices for random reveal order
+    const shuffledIndices = [...charIndices].sort(() => Math.random() - 0.5);
+
+    const revealStartTime = performance.now();
+    let animationId: number;
+
+    const animate = () => {
+      const elapsed = performance.now() - revealStartTime;
+      const progress = Math.min(elapsed / revealDuration, 1);
+
+      // Determine how many characters to reveal based on progress
+      const totalToReveal = Math.floor(progress * shuffledIndices.length);
+
+      // Add newly revealed indices
+      for (let i = revealedIndicesRef.current.size; i < totalToReveal; i++) {
+        if (i < shuffledIndices.length) {
+          revealedIndicesRef.current.add(shuffledIndices[i]);
+        }
+      }
+
+      let result = "";
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === " ") {
+          result += " ";
+        } else if (revealedIndicesRef.current.has(i)) {
+          result += text[i];
+        } else {
+          result += chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+
+      setDisplayText(result);
+
+      if (progress < 1) {
+        animationId = requestAnimationFrame(animate);
+      } else {
+        // Ensure all characters are revealed at the end
+        setDisplayText(text);
+        isRevealedRef.current = true;
+      }
+    };
+
+    const interval = setInterval(() => {
+      if (!isRevealedRef.current) {
+        animate();
+      }
+    }, scrambleSpeed);
+
+    animate();
+
+    return () => {
+      clearInterval(interval);
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, [hasStarted, text, scrambleSpeed, revealDuration]);
+
+  return (
+    <span
+      ref={ref}
+      className={className}
+      style={{
+        opacity,
+        transition: "opacity 0.3s ease-out",
+      }}
+    >
+      {displayText || text.split("").map(() => " ").join("")}
+    </span>
+  );
+}
+
 function useAnimatedNumber(target: number, duration: number = 2000, start: boolean = false) {
   const [value, setValue] = useState(0);
   const animationRef = useRef<number | null>(null);
@@ -103,14 +229,14 @@ function AnimatedNumber({
 
 export default function Home() {
   const partners = [
-    { name: "Avalanche", logo: "https://cryptologos.cc/logos/avalanche-avax-logo.svg?v=040" },
-    { name: "Chainlink", logo: "https://cryptologos.cc/logos/chainlink-link-logo.svg?v=040" },
-    { name: "Base", logo: "https://cryptologos.cc/logos/base-base-logo.svg?v=040" },
-    { name: "Solana", logo: "https://cryptologos.cc/logos/solana-sol-logo.svg?v=040" },
-    { name: "Polygon", logo: "https://cryptologos.cc/logos/polygon-matic-logo.svg?v=040" },
-    { name: "Uniswap", logo: "https://cryptologos.cc/logos/uniswap-uni-logo.svg?v=040" },
-    { name: "Arbitrum", logo: "https://cryptologos.cc/logos/arbitrum-arb-logo.svg?v=040" },
-    { name: "Optimism", logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.svg?v=040" },
+    { name: "Avalanche", logo: "/avalanche-avax-logo.svg" },
+    { name: "Chainlink", logo: "/chainlink-link-logo.svg" },
+    { name: "Base", logo: "/Base_square_blue.svg" },
+    { name: "Solana", logo: "/solana-sol-logo.svg" },
+    { name: "Polygon", logo: "/polygon-matic-logo.svg" },
+    { name: "Uniswap", logo: "/uniswap-uni-logo.svg" },
+    { name: "Arbitrum", logo: "/arbitrum-arb-logo.svg" },
+    { name: "Optimism", logo: "/optimism-ethereum-op-logo.svg" },
   ];
 
   const travels = [
@@ -218,10 +344,10 @@ export default function Home() {
               />
               <h1 className="w-fit text-left leading-[0.95]">
                 <span className="block font-[Georgia,Times,serif] text-[clamp(1rem,2.1vw,1.5rem)] font-normal tracking-[0.08em] text-[rgba(134,31,65,0.9)]">
-                  Virginia Tech
+                  <FuzzyText text="Virginia Tech" scrambleSpeed={40} revealDuration={1200} />
                 </span>
                 <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight text-transparent bg-linear-to-r from-(--brand-maroon) via-(--brand-orange) to-(--brand-orange) bg-clip-text drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]">
-                  Blockchain
+                  <FuzzyText text="Blockchain" scrambleSpeed={40} revealDuration={1500} />
                 </span>
               </h1>
             </div>
@@ -241,7 +367,9 @@ export default function Home() {
 
         <div className="pointer-events-none absolute inset-x-0 bottom-8 z-3 px-6 md:bottom-7 md:px-10 lg:px-14">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-4 text-(--brand-maroon)">
-            <span className="text-base md:text-lg uppercase tracking-[0.16em] font-normal">[BACKED BY]</span>
+            <span className="text-base md:text-lg uppercase tracking-[0.16em] font-normal">
+              <FuzzyText text="[Experiences]" scrambleSpeed={30} revealDuration={800} />
+            </span>
             <div className="logo-belt flex-1 bg-[rgba(255,255,255,0.62)]">
               <div className="logo-track">
                 {[...partners, ...partners].map((partner, idx) => (

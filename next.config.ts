@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: configDir,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cryptologos.cc",
+      },
+    ],
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
