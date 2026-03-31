@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-03-31T03:36:59.154Z",
+  "summary": {
+    "totalStablecoins": 50,
+    "totalMarketcapUsd": 226467057508.55713,
+    "totalHolders": 148943473,
+    "totalTransferVolume7d": 1940028102731.496,
+    "totalTransfers7d": 348280709,
+    "avgTransferUsd": 5570.300199232384
+  },
+  "topStablecoins": [
+    {
+      "symbol": "USDT",
+      "marketCap": 106168316429.64948,
+      "holders": 72960673
+    },
+    {
+      "symbol": "USDC",
+      "marketCap": 71120725627.93083,
+      "holders": 34922481
+    },
+    {
+      "symbol": "USDS",
+      "marketCap": 8338046618.795384,
+      "holders": 50099
+    },
+    {
+      "symbol": "USDe",
+      "marketCap": 6776944580.893164,
+      "holders": 163194
+    },
+    {
+      "symbol": "DAI",
+      "marketCap": 5212738827.240894,
+      "holders": 5392170
+    },
+    {
+      "symbol": "USD1",
+      "marketCap": 3490798701.8232603,
+      "holders": 489555
+    },
+    {
+      "symbol": "PYUSD",
+      "marketCap": 3126903921.19792,
+      "holders": 70650
+    },
+    {
+      "symbol": "USDT0",
+      "marketCap": 2638998974.307652,
+      "holders": 8204993
+    },
+    {
+      "symbol": "crvUSD",
+      "marketCap": 2092809204.950392,
+      "holders": 95335
+    },
+    {
+      "symbol": "USDt",
+      "marketCap": 1847205574.047393,
+      "holders": 1353137
+    }
+  ],
+  "topChains": [
+    {
+      "blockchain": "base",
+      "volume": 1209410086730.7976,
+      "transfers": 23470171
+    },
+    {
+      "blockchain": "ethereum",
+      "volume": 530213601335.95746,
+      "transfers": 10536237
+    },
+    {
+      "blockchain": "optimism",
+      "volume": 57456606807.69852,
+      "transfers": 7601628
+    },
+    {
+      "blockchain": "bnb",
+      "volume": 49441658453.940346,
+      "transfers": 70121067
+    },
+    {
+      "blockchain": "monad",
+      "volume": 37675679567.0381,
+      "transfers": 4557314
+    },
+    {
+      "blockchain": "polygon",
+      "volume": 15427139686.835056,
+      "transfers": 160918554
+    },
+    {
+      "blockchain": "arbitrum",
+      "volume": 11946765436.001915,
+      "transfers": 7786239
+    },
+    {
+      "blockchain": "avalanche_c",
+      "volume": 7792325558.204664,
+      "transfers": 5620463
+    },
+    {
+      "blockchain": "plasma",
+      "volume": 4907113450.1481085,
+      "transfers": 552786
+    },
+    {
+      "blockchain": "mantle",
+      "volume": 4887517562.830078,
+      "transfers": 81287
+    }
+  ],
+  "metadata": {
+    "marketcapLastUpdated": "2026-03-29",
+    "transfersPeriod": {
+      "first": "2026-03-24 00:00:01.000 UTC",
+      "last": "2026-03-31 01:51:35.000 UTC"
+    }
+  }
+}

@@ -44,6 +44,11 @@ jobs:
           dune query run-sql --sql "$SQL" -o json > data/transfers-results.json
           echo "Results saved to data/transfers-results.json"
 
+      - name: Compress Data
+        run: |
+          echo "Compressing data..."
+          cd data && node compress-data.js
+
       - name: Commit and push results
         run: |
           git config --local user.email "action@github.com"
