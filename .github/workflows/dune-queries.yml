@@ -29,7 +29,7 @@ jobs:
           DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
         run: |
           echo "Running marketcap query..."
-          SQL=$(cat dune-scripts/stablecoin-marketcap.sql)
+          SQL=$(cat data/dune-scripts/stablecoin-marketcap.sql)
           dune query run-sql --sql "$SQL" -o json > data/dune-scripts/stablecoin-marketcap.sql
           echo "Results saved to data/marketcap-results.json"
 
@@ -38,7 +38,7 @@ jobs:
           DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
         run: |
           echo "Running transfers query..."
-          SQL=$(cat dune-scripts/stablecoin-total-transfers.sql)
+          SQL=$(cat data/dune-scripts/stablecoin-total-transfers.sql)
           dune query run-sql --sql "$SQL" -o json > data/dune-scripts/stablecoin-total-transfers.sql
           echo "Results saved to data/transfers-results.json"
 
