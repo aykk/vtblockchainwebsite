@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "Running marketcap query..."
           SQL=$(cat data/dune-scripts/stablecoin-marketcap.sql)
-          dune query run-sql --sql "$SQL" -o json > data/dune-scripts/stablecoin-marketcap.sql
+          dune query run-sql --sql "$SQL" -o json > data/marketcap-results.json
           echo "Results saved to data/marketcap-results.json"
 
       - name: Run Stablecoin Transfers Query
@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "Running transfers query..."
           SQL=$(cat data/dune-scripts/stablecoin-total-transfers.sql)
-          dune query run-sql --sql "$SQL" -o json > data/dune-scripts/stablecoin-total-transfers.sql
+          dune query run-sql --sql "$SQL" -o json > data/transfers-results.json
           echo "Results saved to data/transfers-results.json"
 
       - name: Commit and push results
