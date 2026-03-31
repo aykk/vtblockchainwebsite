@@ -284,7 +284,7 @@ export default function BitcoinBackground() {
           newEl.angle += newEl.orbitSpeed * deltaTime * newEl.orbitDirection;
 
           // Occasionally update text if it's a generator (reduced frequency)
-          if (newEl.isGenerator && newEl.generator && Math.random() < 0.05) {
+          if (newEl.isGenerator && newEl.generator && Math.random() < 0.09) {
             newEl.text = newEl.generator();
           }
 

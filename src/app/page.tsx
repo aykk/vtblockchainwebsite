@@ -17,16 +17,36 @@ function FuzzyText({
   const [displayText, setDisplayText] = useState("");
   const [hasStarted, setHasStarted] = useState(false);
   const [opacity, setOpacity] = useState(0);
+  const [charWidths, setCharWidths] = useState<number[]>([]);
   const isRevealedRef = useRef(false);
   const revealedIndicesRef = useRef<Set<number>>(new Set());
   const ref = useRef<HTMLSpanElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
+
+  // Measure character widths on mount
+  useEffect(() => {
+    if (!measureRef.current) return;
+    
+    const widths: number[] = [];
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === " ") {
+        widths.push(0); // Spaces don't need fixed width
+      } else {
+        // Measure each unique character
+        measureRef.current.textContent = text[i];
+        const width = measureRef.current.getBoundingClientRect().width;
+        widths.push(width);
+      }
+    }
+    setCharWidths(widths);
+  }, [text]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasStarted) {
+          if (entry.isIntersecting && !hasStarted && charWidths.length > 0) {
             setHasStarted(true);
           }
         });
@@ -39,7 +59,7 @@ function FuzzyText({
     }
 
     return () => observer.disconnect();
-  }, [hasStarted]);
+  }, [hasStarted, charWidths]);
 
   useEffect(() => {
     if (!hasStarted) return;
@@ -116,16 +136,46 @@ function FuzzyText({
   }, [hasStarted, text, scrambleSpeed, revealDuration]);
 
   return (
-    <span
-      ref={ref}
-      className={className}
-      style={{
-        opacity,
-        transition: "opacity 0.3s ease-out",
-      }}
-    >
-      {displayText || text.split("").map(() => " ").join("")}
-    </span>
+    <>
+      {/* Hidden measurement element */}
+      <span
+        ref={measureRef}
+        aria-hidden="true"
+        className={className}
+        style={{
+          position: "absolute",
+          visibility: "hidden",
+          pointerEvents: "none",
+        }}
+      />
+      <span
+        ref={ref}
+        className={className}
+        style={{
+          opacity,
+          transition: "opacity 0.3s ease-out",
+        }}
+      >
+        {(displayText || text).split("").map((char, i) => {
+          const width = charWidths[i];
+          if (char === " " || width === undefined || width === 0) {
+            return char === " " ? " " : char;
+          }
+          return (
+            <span
+              key={i}
+              style={{
+                display: "inline-block",
+                width: `${width}px`,
+                textAlign: "center",
+              }}
+            >
+              {char}
+            </span>
+          );
+        })}
+      </span>
+    </>
   );
 }
 
