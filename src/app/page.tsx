@@ -650,14 +650,22 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="travel" className="grid gap-4 md:grid-cols-3">
-          {travels.map((stop) => (
-            <article key={stop.event} className="section-shell p-6 transition hover:-translate-y-1">
-              <p className="text-xs uppercase tracking-[0.2em] text-(--brand-orange)">{stop.short}</p>
-              <h3 className="mt-2 text-xl font-medium text-[#211319]">{stop.event}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-(--muted)">{stop.note}</p>
-            </article>
-          ))}
+        <section id="travel" className="space-y-6">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
+            <div>
+              <p className="section-kicker">Travel</p>
+              <h2 className="section-title">Conferences Attended</h2>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {travels.map((stop) => (
+              <article key={stop.event} className="section-shell p-6 transition hover:-translate-y-1">
+                <p className="text-xs uppercase tracking-[0.2em] text-(--brand-orange)">{stop.short}</p>
+                <h3 className="mt-2 text-xl font-medium text-[#211319]">{stop.event}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-(--muted)">{stop.note}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="section-shell border-none !bg-linear-to-r from-[rgba(134,31,65,0.94)] to-[rgba(206,76,0,0.92)] p-8 text-white md:p-10">
