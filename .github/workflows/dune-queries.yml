@@ -18,7 +18,7 @@ jobs:
       - name: Install Dune CLI
         run: |
           # Install Dune CLI using go install
-          go install github.com/duneanalytics/duneapi-client-go/cmd/dune@latest
+          go install github.com/duneanalytics/duneapi-client-go/
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
           dune --version
 
