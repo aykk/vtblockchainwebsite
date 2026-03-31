@@ -16,10 +16,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Dune CLI
+        env:
+          DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
         run: |
-          # Install Dune CLI from the new repository
-          go install github.com/duneanalytics/cli/cmd/dune@latest
-          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+          # Install Dune CLI from the correct repo
+          curl -sSfL https://github.com/duneanalytics/cli/raw/main/install.sh | bash
+          echo "$HOME/.dune/bin" >> $GITHUB_PATH
           dune --version
 
       - name: Run Stablecoin Marketcap Query
