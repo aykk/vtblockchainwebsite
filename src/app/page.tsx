@@ -3,6 +3,131 @@
 import { useEffect, useRef, useState } from "react";
 import BitcoinBackground from "@/components/bitcoin-background";
 
+function Sparkle({
+  delay = 0,
+  duration = 1000,
+  peakScale = 1,
+  color = "#CE4C00",
+  top = "50%",
+  left = "50%",
+}: {
+  delay?: number;
+  duration?: number;
+  peakScale?: number;
+  color?: string;
+  top?: string;
+  left?: string;
+}) {
+  return (
+    <span
+      className="pointer-events-none absolute inline-block sparkle-container"
+      style={{
+        top,
+        left,
+        width: 8,
+        height: 8,
+        ["--peak-scale" as string]: peakScale,
+        animationDelay: `${delay}ms`,
+        animationDuration: `${duration}ms`,
+      }}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        className="sparkle-star"
+      >
+        <path
+          d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"
+          fill={color}
+        />
+      </svg>
+    </span>
+  );
+}
+
+function SparkleText({
+  children,
+  sparkleCount = 6,
+  color = null,
+  className = "",
+}: {
+  children: React.ReactNode;
+  sparkleCount?: number;
+  color?: string | null;
+  className?: string;
+}) {
+  const [sparkles, setSparkles] = useState<
+    Array<{
+      key: string;
+      delay: number;
+      duration: number;
+      peakScale: number;
+      top: string;
+      left: string;
+      color: string;
+      spawnTime: number;
+    }>
+  >([]);
+  const spawnIdRef = useRef(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    // Spawn a new sparkle
+    const spawnSparkle = () => {
+      const id = spawnIdRef.current++;
+      const duration = 800 + Math.random() * 1000;
+      const newSparkle = {
+        key: `sparkle-${id}`,
+        delay: 0,
+        duration,
+        peakScale: 0.5 + Math.random() * 1.5,
+        top: `${10 + Math.random() * 60}%`,
+        left: `${5 + Math.random() * 90}%`,
+        color: color || (Math.random() > 0.5 ? "#CE4C00" : "#861F41"),
+        spawnTime: Date.now(),
+      };
+      
+      setSparkles(prev => [...prev, newSparkle]);
+      
+      // Remove sparkle after animation completes
+      setTimeout(() => {
+        setSparkles(prev => prev.filter(s => s.key !== newSparkle.key));
+      }, duration);
+    };
+
+    // Initial spawn
+    for (let i = 0; i < sparkleCount; i++) {
+      setTimeout(spawnSparkle, Math.random() * 2000);
+    }
+
+    // Continuous spawning
+    const interval = setInterval(() => {
+      spawnSparkle();
+    }, 600);
+
+    return () => clearInterval(interval);
+  }, [sparkleCount, color]);
+
+  return (
+    <span ref={ref} className={`relative inline-block ${className}`}>
+      {children}
+      <span className="pointer-events-none absolute inset-0 overflow-visible">
+        {sparkles.map((sparkle) => (
+          <Sparkle
+            key={sparkle.key}
+            delay={sparkle.delay}
+            duration={sparkle.duration}
+            peakScale={sparkle.peakScale}
+            top={sparkle.top}
+            left={sparkle.left}
+            color={sparkle.color}
+          />
+        ))}
+      </span>
+    </span>
+  );
+}
+
 function FuzzyText({
   text,
   className = "",
@@ -395,12 +520,16 @@ export default function Home() {
                   <FuzzyText text="Virginia Tech" scrambleSpeed={40} revealDuration={1200} />
                 </span>
                 <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]" style={{ fontFamily: "var(--font-neco), sans-serif" }}>
-                  <span className="text-(--brand-maroon)">
-                    <FuzzyText text="Block" scrambleSpeed={40} revealDuration={1500} />
-                  </span>
-                  <span className="text-(--brand-orange)">
-                    <FuzzyText text="chain" scrambleSpeed={40} revealDuration={1500} />
-                  </span>
+                  <SparkleText sparkleCount={4} color="#CE4C00">
+                    <span className="shiny-text">
+                      <FuzzyText text="Block" scrambleSpeed={40} revealDuration={1500} />
+                    </span>
+                  </SparkleText>
+                  <SparkleText sparkleCount={4} color="#861F41">
+                    <span className="shiny-text">
+                      <FuzzyText text="chain" scrambleSpeed={40} revealDuration={1500} />
+                    </span>
+                  </SparkleText>
                 </span>
               </h1>
             </div>
