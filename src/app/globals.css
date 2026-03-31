@@ -110,6 +110,71 @@ html {
   color: var(--brand-maroon);
 }
 
+.btn-swipe {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  padding: 0.72rem 1.1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: transform 120ms ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+.btn-swipe:hover {
+  transform: translate(2px, -2px);
+}
+
+.btn-swipe::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -200%;
+  width: 200%;
+  height: 100%;
+  transform: skewX(-25deg);
+  transition: left 0.5s ease;
+  z-index: -1;
+}
+
+.btn-swipe-orange {
+  background: var(--brand-orange);
+  color: #fff;
+  border: 1px solid var(--brand-orange);
+}
+
+.btn-swipe-orange::before {
+  background: #fff;
+}
+
+.btn-swipe-orange:hover {
+  color: var(--brand-orange);
+}
+
+.btn-swipe-orange:hover::before {
+  left: -50%;
+}
+
+.btn-swipe-ghost {
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--brand-maroon);
+  border: 1px solid var(--line-strong);
+}
+
+.btn-swipe-ghost::before {
+  background: var(--brand-maroon);
+}
+
+.btn-swipe-ghost:hover {
+  color: #fff;
+  border-color: var(--brand-maroon);
+}
+
+.btn-swipe-ghost:hover::before {
+  left: -50%;
+}
+
 .logo-belt {
   overflow: hidden;
   border: 1px solid var(--line);

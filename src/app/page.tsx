@@ -505,10 +505,10 @@ export default function Home() {
                 <h3 className="text-xl font-medium text-[#22131a]">{project.title}</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-(--muted)">{project.description}</p>
                 <div className="mt-6 flex gap-3 text-sm font-semibold">
-                  <a className="btn-brutal btn-orange" href={project.website} target="_blank" rel="noopener noreferrer">
+                  <a className="btn-swipe btn-swipe-orange" href={project.website} target="_blank" rel="noopener noreferrer">
                     [Website]
                   </a>
-                  <a className="btn-brutal btn-ghost" href={project.repo} target="_blank" rel="noopener noreferrer">
+                  <a className="btn-swipe btn-swipe-ghost" href={project.repo} target="_blank" rel="noopener noreferrer">
                     [GitHub]
                   </a>
                 </div>
