@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import katex from "katex";
 
 // Random generators for dynamic noise text
 function randomHex(length: number): string {
@@ -71,12 +72,18 @@ type ForbiddenZone = {
 };
 
 const coreMath = [
-  () => "p = Pr[honest finds next block]",
-  () => "q = Pr[attacker finds next block]",
-  () => `qᶻ = (${(Math.random() * 0.5).toFixed(2)}/${(Math.random() * 0.5 + 0.5).toFixed(2)})ᶻ`,
-  () => `λ = ${Math.floor(Math.random() * 100)} · (q/p)`,
-  () => `1 − Σ(k=0→${Math.floor(Math.random() * 10 + 5)}) ((λᵏ e⁻ˡ) / k!) · (1 − (q/p)ᶻ⁻ᵏ)`,
-  () => `P < 10⁻${Math.floor(Math.random() * 5 + 1)}`,
+  () => "p = \\Pr[\\text{honest finds next block}]",
+  () => "q = \\Pr[\\text{attacker finds next block}]",
+  () => "q^{z} = \\left(\\frac{q}{p}\\right)^{z}",
+  () => "\\lambda = z \\cdot \\frac{q}{p}",
+  () => "1 - \\sum_{k=0}^{z} \\frac{\\lambda^{k} e^{-\\lambda}}{k!} \\cdot \\left(1 - \\left(\\frac{q}{p}\\right)^{z-k}\\right)",
+  () => "P < 10^{-z}",
+];
+
+const dynamicMath = [
+  () => `λ = ${Math.floor(Math.random() * 100)}`,
+  () => `P = ${(Math.random() * 0.001).toExponential(2)}`,
+  () => `z = ${Math.floor(Math.random() * 20 + 1)}`,
 ];
 
 const cryptoGenerators = [
@@ -270,6 +277,25 @@ function generateNoiseElements(): NoiseElement[] {
       opacity: 0.67,
       fontWeight: "normal",
       zIndex: 3,
+      isDynamic: false,
+      generator,
+    });
+  }
+
+  for (const generator of shuffledUnique(dynamicMath).slice(0, 4)) {
+    const text = generator();
+    if (usedText.has(text)) continue;
+    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 200);
+    if (!pos) continue;
+    usedText.add(text);
+    generatedElements.push({
+      text,
+      top: pos.top,
+      left: pos.left,
+      fontSize: "16px",
+      opacity: 0.75,
+      fontWeight: "normal",
+      zIndex: 3,
       isDynamic: true,
       generator,
     });
@@ -379,6 +405,14 @@ export default function BitcoinBackground() {
 
   const colors = ["rgba(206,76,0,0.86)", "rgba(134,31,65,0.84)"];
 
+  const renderContent = (text: string) => {
+    const isLatex = text.includes("\\") || text.includes("^{") || text.includes("_{") || text.includes("\\frac");
+    if (isLatex) {
+      return { __html: katex.renderToString(text, { throwOnError: false, output: "html" }) };
+    }
+    return undefined;
+  };
+
   return (
     <div
       aria-hidden
@@ -394,31 +428,35 @@ export default function BitcoinBackground() {
         transform: `translateY(-${BACKGROUND_UPSHIFT_PERCENT}%)`,
       }}
     >
-      {elements.map((el, index) => (
-        <div
-          key={index}
-          ref={(node) => { divRefs.current[index] = node; }}
-          style={{
-            position: "absolute",
-            top: el.top,
-            left: el.left,
-            whiteSpace: "nowrap",
-            fontSize: el.fontSize,
-            letterSpacing: "0.05em",
-            opacity: el.opacity,
-            fontWeight: el.fontWeight,
-            zIndex: el.zIndex,
-            color: colors[index % colors.length],
-            pointerEvents: "none",
-            userSelect: "none",
-            transform: `translate(${(parallax.x * (2.4 + el.zIndex * 2.7)).toFixed(2)}px, ${(parallax.y * (2.4 + el.zIndex * 2.7)).toFixed(2)}px)`,
-            transition: "transform 120ms ease-out",
-            willChange: "transform",
-          }}
-        >
-          {el.text}
-        </div>
-      ))}
+      {elements.map((el, index) => {
+        const html = renderContent(el.text);
+        return (
+          <div
+            key={index}
+            ref={(node) => { divRefs.current[index] = node; }}
+            style={{
+              position: "absolute",
+              top: el.top,
+              left: el.left,
+              whiteSpace: "nowrap",
+              fontSize: el.fontSize,
+              letterSpacing: "0.05em",
+              opacity: el.opacity,
+              fontWeight: el.fontWeight,
+              zIndex: el.zIndex,
+              color: colors[index % colors.length],
+              pointerEvents: "none",
+              userSelect: "none",
+              transform: `translate(${(parallax.x * (2.4 + el.zIndex * 2.7)).toFixed(2)}px, ${(parallax.y * (2.4 + el.zIndex * 2.7)).toFixed(2)}px)`,
+              transition: "transform 120ms ease-out",
+              willChange: "transform",
+            }}
+            dangerouslySetInnerHTML={html}
+          >
+            {html ? undefined : el.text}
+          </div>
+        );
+      })}
     </div>
   );
 }

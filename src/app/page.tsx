@@ -427,7 +427,7 @@ export default function Home() {
 
         <section className="section-shell border-none bg-linear-to-r from-[rgba(134,31,65,0.94)] to-[rgba(206,76,0,0.92)] p-8 text-white md:p-10">
           <p className="text-xs uppercase tracking-[0.2em] text-white/80">Our mission</p>
-          <h2 className="mt-3 max-w-3xl text-3xl font-medium leading-tight md:text-4xl">
+          <h2 className="mt-3 max-w-3xl text-3xl font-medium leading-tight text-white md:text-4xl">
             Build the strongest student career pipeline into web3.
           </h2>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-white/90">
@@ -439,7 +439,7 @@ export default function Home() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
             <div>
               <p className="section-kicker">Projects</p>
-              <h2 className="section-title">Chain-level data analysis, MEV</h2>
+              <h2 className="section-title">Data Analysis, MEV, etc.</h2>
             </div>
             <p className="max-w-sm text-sm text-(--muted)">Built by members and published for portfolio-ready <strong>proof of work.</strong></p>
           </div>
