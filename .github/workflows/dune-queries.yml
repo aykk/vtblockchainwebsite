@@ -1,0 +1,53 @@
+name: Run Dune Queries
+
+on:
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    # Allow manual trigger
+
+jobs:
+  run-dune-queries:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Dune CLI
+        run: |
+          # Download and extract without running auth
+          curl -sSfL https://dune.com/cli/install.sh | sh -s -- --no-run-auth
+          echo "$HOME/.dune/bin" >> $GITHUB_PATH
+          dune --version
+
+      - name: Run Stablecoin Marketcap Query
+        env:
+          DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
+        run: |
+          echo "Running marketcap query..."
+          SQL=$(cat dune-scripts/stablecoin-marketcap.sql)
+          dune query run-sql --sql "$SQL" -o json > data/marketcap-results.json
+          echo "Results saved to data/marketcap-results.json"
+
+      - name: Run Stablecoin Transfers Query
+        env:
+          DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
+        run: |
+          echo "Running transfers query..."
+          SQL=$(cat dune-scripts/stablecoin-total-transfers.sql)
+          dune query run-sql --sql "$SQL" -o json > data/transfers-results.json
+          echo "Results saved to data/transfers-results.json"
+
+      - name: Commit and push results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Dune query results [skip ci]"
+            git push
+          fi
