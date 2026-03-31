@@ -394,7 +394,7 @@ export default function Home() {
                 <span className="block font-[Georgia,Times,serif] text-[clamp(1rem,2.1vw,1.5rem)] font-normal tracking-[0.08em] text-[rgba(134,31,65,0.9)]">
                   <FuzzyText text="Virginia Tech" scrambleSpeed={40} revealDuration={1200} />
                 </span>
-                <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]" style={{ fontFamily: "var(--font-neco), sans-serif" }}>
+                <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight" style={{ fontFamily: "var(--font-neco), sans-serif" }}>
                   <span className="text-(--brand-maroon)">
                     <FuzzyText text="Block" scrambleSpeed={40} revealDuration={1500} />
                   </span>

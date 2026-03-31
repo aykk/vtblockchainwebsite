@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
@@ -46,32 +46,6 @@ function generateTarget(): string {
   return `target: 0x${randomHex(64).replace(/0/g, "0").substring(0, 16)}...`;
 }
 
-type NoiseElement = {
-  text: string;
-  top: string;
-  left: string;
-  fontSize: string;
-  opacity: number;
-  fontWeight: "normal" | "bold";
-  zIndex: number;
-  isDynamic: boolean;
-  generator?: () => string;
-};
-
-type PlacementBox = {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-};
-
-type ForbiddenZone = {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-};
-
 const coreMath = [
   () => "p = \\Pr[\\text{honest finds next block}]",
   () => "q = \\Pr[\\text{attacker finds next block}]",
@@ -97,7 +71,6 @@ const cryptoGenerators = [
 ];
 
 const structuralNoise = ["+", "−", "||", "::", "{ }", "[ ]", "Σ", "∫", "⇒", "0x", "11", "π", "Δ"];
-const BACKGROUND_UPSHIFT_PERCENT = 2;
 
 const extendedCryptoNoise = [
   () => "ECDSA(secp256k1)",
@@ -128,244 +101,237 @@ const extendedStructuralNoise = [
   "α", "β", "γ", "δ", "ε", "η", "θ", "κ", "μ", "ν", "ρ", "σ", "τ", "φ", "χ", "ω",
 ];
 
-function estimateBox(text: string, fontSize: string): { width: number; height: number } {
-  const fontPx = Number.parseInt(fontSize, 10);
-  const width = Math.min(38, Math.max(3, text.length * fontPx * 0.03));
-  const height = Math.max(2.4, fontPx * 0.17);
-  return { width, height };
+const allGenerators = [
+  ...coreMath,
+  ...dynamicMath,
+  ...cryptoGenerators,
+  ...extendedCryptoNoise,
+];
+
+const allStaticTexts = [...extendedStructuralNoise];
+
+type OrbitalElement = {
+  id: string;
+  text: string;
+  radius: number; // distance from center (in vw/vh units)
+  angle: number; // current angle in radians
+  orbitSpeed: number; // radians per frame
+  fontSize: string;
+  opacity: number;
+  targetOpacity: number;
+  fontWeight: "normal" | "bold";
+  zIndex: number;
+  isGenerator: boolean;
+  generator?: () => string;
+  state: "fading-in" | "orbiting" | "fading-out" | "gone";
+  fadeProgress: number; // 0-1 for fades, countdown for orbiting
+  timeUntilFadeOut: number; // ms remaining before fade out starts
+  orbitDirection: 1 | -1;
+  width: number;
+  height: number;
+};
+
+const CENTER_X = 50; // center of screen in percentage
+const CENTER_Y = 45; // slightly above true center where title sits
+const MIN_RADIUS = 15; // minimum orbit radius (% of viewport)
+const MAX_RADIUS = 48; // maximum orbit radius (% of viewport)
+const FADE_DURATION = 2000; // ms to fade in/out
+const ORBIT_SPEED_BASE = 0.0002; // base rotation speed
+const ELEMENT_LIFETIME = 8000; // ms before element starts fading out
+
+// Exclusion zone for hero content (title, description, buttons)
+// Defined as percentage of viewport (x, y, width, height)
+const EXCLUSION_ZONE = {
+  x: 10,      // 10% from left
+  y: 30,      // 30% from top
+  width: 80,  // 80% width (10% to 90%)
+  height: 35, // 35% height (30% to 65%)
+};
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
 }
 
-function overlaps(a: PlacementBox, b: PlacementBox, gap = 1.4) {
-  return !(
-    a.left + a.width + gap < b.left ||
-    b.left + b.width + gap < a.left ||
-    a.top + a.height + gap < b.top ||
-    b.top + b.height + gap < a.top
+function isInExclusionZone(x: number, y: number): boolean {
+  return (
+    x >= EXCLUSION_ZONE.x &&
+    x <= EXCLUSION_ZONE.x + EXCLUSION_ZONE.width &&
+    y >= EXCLUSION_ZONE.y &&
+    y <= EXCLUSION_ZONE.y + EXCLUSION_ZONE.height
   );
 }
 
-function intersectsZone(box: PlacementBox, zone: ForbiddenZone) {
-  return !(
-    box.left + box.width < zone.left ||
-    zone.left + zone.width < box.left ||
-    box.top + box.height < zone.top ||
-    zone.top + zone.height < box.top
-  );
+function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
-function getScatteredBiasedPosition(width: number, height: number) {
-  const r = Math.random();
+function randomRange(min: number, max: number): number {
+  return Math.random() * (max - min) + min;
+}
 
-  // More random global scatter, with light side preference.
-  if (r < 0.25) {
-    return {
-      top: 4 + Math.random() * Math.max(1, 90 - height),
-      left: 1 + Math.random() * Math.max(1, 26 - width),
-    };
+function createNewElement(): OrbitalElement {
+  const isGenerator = Math.random() > 0.3;
+  let text: string;
+  let generator: (() => string) | undefined;
+
+  if (isGenerator) {
+    generator = allGenerators[Math.floor(Math.random() * allGenerators.length)];
+    text = generator();
+  } else {
+    text = allStaticTexts[Math.floor(Math.random() * allStaticTexts.length)];
   }
-  if (r < 0.5) {
-    return {
-      top: 4 + Math.random() * Math.max(1, 90 - height),
-      left: 73 + Math.random() * Math.max(1, 26 - width),
-    };
-  }
-  if (r < 0.75) {
-    return {
-      top: 4 + Math.random() * Math.max(1, 90 - height),
-      left: 2 + Math.random() * Math.max(1, 94 - width),
-    };
-  }
-  if (r < 0.875) {
-    return {
-      top: 1 + Math.random() * Math.max(1, 16 - height),
-      left: 2 + Math.random() * Math.max(1, 94 - width),
-    };
-  }
+
+  // Largest font size reduced by 20%: 20-38 becomes 16-30.4 (16-30)
+  const fontSizeNum = Math.random() > 0.7 ? randomRange(16, 30) : randomRange(8, 16);
+  const fontSize = `${fontSizeNum}px`;
+
+  // Estimate dimensions based on text length and font size
+  const width = Math.min(30, Math.max(3, text.length * fontSizeNum * 0.03));
+  const height = Math.max(2, fontSizeNum * 0.15);
+
   return {
-    top: 82 + Math.random() * Math.max(1, 16 - height),
-    left: 2 + Math.random() * Math.max(1, 94 - width),
+    id: generateId(),
+    text,
+    radius: randomRange(MIN_RADIUS, MAX_RADIUS),
+    angle: randomRange(0, Math.PI * 2),
+    orbitSpeed: randomRange(ORBIT_SPEED_BASE * 0.5, ORBIT_SPEED_BASE * 2),
+    fontSize,
+    opacity: 0,
+    targetOpacity: randomRange(0.15, 0.6),
+    fontWeight: Math.random() > 0.8 ? "bold" : "normal",
+    zIndex: Math.floor(randomRange(1, 4)),
+    isGenerator,
+    generator,
+    state: "fading-in",
+    fadeProgress: 0,
+    timeUntilFadeOut: ELEMENT_LIFETIME + Math.random() * 5000,
+    orbitDirection: Math.random() > 0.5 ? 1 : -1,
+    width,
+    height,
   };
-}
-
-function shuffledUnique<T>(items: T[]) {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-function placeWithoutOverlap(
-  placed: PlacementBox[],
-  forbidden: ForbiddenZone[],
-  text: string,
-  fontSize: string,
-  tries = 120,
-): { top: string; left: string } | null {
-  const { width, height } = estimateBox(text, fontSize);
-
-  for (let i = 0; i < tries; i += 1) {
-    const pos = getScatteredBiasedPosition(width, height);
-    const box: PlacementBox = { top: pos.top, left: pos.left, width, height };
-    const blockedByZone = forbidden.some((zone) => intersectsZone(box, zone));
-    if (blockedByZone) continue;
-    const isBlocked = placed.some((existing) => overlaps(existing, box));
-    if (!isBlocked) {
-      placed.push(box);
-      return { top: `${pos.top}%`, left: `${pos.left}%` };
-    }
-  }
-
-  // If dense, still keep it on sides and away from center.
-  const fallback = getScatteredBiasedPosition(width, height);
-  const fallbackBox: PlacementBox = { top: fallback.top, left: fallback.left, width, height };
-  const fallbackBlocked = forbidden.some((zone) => intersectsZone(fallbackBox, zone));
-  const fallbackOverlap = placed.some((existing) => overlaps(existing, fallbackBox));
-  if (!fallbackBlocked && !fallbackOverlap) {
-    placed.push(fallbackBox);
-    return { top: `${fallback.top}%`, left: `${fallback.left}%` };
-  }
-
-  return null;
-}
-
-function generateNoiseElements(): NoiseElement[] {
-  const generatedElements: NoiseElement[] = [];
-  const placed: PlacementBox[] = [];
-  const usedText = new Set<string>();
-  const forbidden: ForbiddenZone[] = [
-    // Navbar zone
-    { top: 0 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 18 },
-    // Main hero content safe area
-    { top: 26 + BACKGROUND_UPSHIFT_PERCENT, left: 20, width: 60, height: 44 },
-    // Backed-by belt zone
-    { top: 80 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 20 },
-  ];
-
-  const macroTerms = shuffledUnique(coreMath).slice(0, 5);
-  for (const generator of macroTerms) {
-    const text = generator();
-    if (usedText.has(text)) continue;
-    const fontSize = `${Math.floor(Math.random() * 34) + 52}px`;
-    const pos = placeWithoutOverlap(placed, forbidden, text, fontSize, 280);
-    if (!pos) continue;
-    usedText.add(text);
-    generatedElements.push({
-      text,
-      top: pos.top,
-      left: pos.left,
-      fontSize,
-      opacity: 0.047,
-      fontWeight: "bold",
-      zIndex: 1,
-      isDynamic: true,
-      generator,
-    });
-  }
-
-  for (const generator of shuffledUnique(coreMath)) {
-    const text = generator();
-    if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 320);
-    if (!pos) continue;
-    usedText.add(text);
-    generatedElements.push({
-      text,
-      top: pos.top,
-      left: pos.left,
-      fontSize: "16px",
-      opacity: 0.67,
-      fontWeight: "normal",
-      zIndex: 3,
-      isDynamic: false,
-      generator,
-    });
-  }
-
-  for (const generator of shuffledUnique(dynamicMath).slice(0, 4)) {
-    const text = generator();
-    if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 200);
-    if (!pos) continue;
-    usedText.add(text);
-    generatedElements.push({
-      text,
-      top: pos.top,
-      left: pos.left,
-      fontSize: "16px",
-      opacity: 0.75,
-      fontWeight: "normal",
-      zIndex: 3,
-      isDynamic: true,
-      generator,
-    });
-  }
-
-  const cryptoTerms = shuffledUnique([...cryptoGenerators, ...extendedCryptoNoise]).slice(0, 35);
-  for (const generator of cryptoTerms) {
-    const text = generator();
-    if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "11px", 240);
-    if (!pos) continue;
-    usedText.add(text);
-    generatedElements.push({
-      text,
-      top: pos.top,
-      left: pos.left,
-      fontSize: "11px",
-      opacity: 0.27 + Math.random() * 0.2,
-      fontWeight: "normal",
-      zIndex: 2,
-      isDynamic: true,
-      generator,
-    });
-  }
-
-  const symbolTerms = shuffledUnique(extendedStructuralNoise).slice(0, 55);
-  for (const text of symbolTerms) {
-    if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "10px", 180);
-    if (!pos) continue;
-    usedText.add(text);
-    generatedElements.push({
-      text,
-      top: pos.top,
-      left: pos.left,
-      fontSize: "10px",
-      opacity: 0.17 + Math.random() * 0.14,
-      fontWeight: "normal",
-      zIndex: 2,
-      isDynamic: false,
-    });
-  }
-
-  return generatedElements;
 }
 
 export default function BitcoinBackground() {
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
-  const [elements, setElements] = useState<NoiseElement[]>([]);
+  const [elements, setElements] = useState<OrbitalElement[]>([]);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
-  const elementsRef = useRef<NoiseElement[]>([]);
-  const divRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const animationRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(0);
+  const elementsRef = useRef<OrbitalElement[]>([]);
+  const spawnTimerRef = useRef<number>(0);
 
+  // Keep ref in sync
   useEffect(() => {
     elementsRef.current = elements;
-    // Update refs array size
-    divRefs.current = divRefs.current.slice(0, elements.length);
   }, [elements]);
 
+  const spawnElement = useCallback(() => {
+    const newElement = createNewElement();
+    setElements(prev => [...prev, newElement]);
+  }, []);
+
+  // Animation loop - throttled for performance
   useEffect(() => {
-    const syncFromViewport = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements());
+    let frameSkip = 0;
+
+    const animate = (timestamp: number) => {
+      if (!lastTimeRef.current) lastTimeRef.current = timestamp;
+      const deltaTime = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
+
+      // Skip every other frame for performance (30fps instead of 60fps)
+      frameSkip++;
+      if (frameSkip % 2 === 0) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      setElements(prevElements => {
+        const updated: OrbitalElement[] = [];
+
+        for (const el of prevElements) {
+          const newEl = { ...el };
+
+          // Handle fade states
+          if (newEl.state === "fading-in") {
+            newEl.fadeProgress += deltaTime / FADE_DURATION;
+            if (newEl.fadeProgress >= 1) {
+              newEl.fadeProgress = 1;
+              newEl.state = "orbiting";
+            }
+            newEl.opacity = newEl.targetOpacity * easeOutCubic(newEl.fadeProgress);
+          } else if (newEl.state === "orbiting") {
+            newEl.timeUntilFadeOut -= deltaTime;
+            if (newEl.timeUntilFadeOut <= 0) {
+              newEl.state = "fading-out";
+              newEl.fadeProgress = 1;
+            }
+            newEl.opacity = newEl.targetOpacity;
+          } else if (newEl.state === "fading-out") {
+            newEl.fadeProgress -= deltaTime / FADE_DURATION;
+            if (newEl.fadeProgress <= 0) {
+              newEl.state = "gone";
+              newEl.opacity = 0;
+            } else {
+              newEl.opacity = newEl.targetOpacity * newEl.fadeProgress;
+            }
+          }
+
+          // Skip gone elements
+          if (newEl.state === "gone") continue;
+
+          // Update orbit
+          newEl.angle += newEl.orbitSpeed * deltaTime * newEl.orbitDirection;
+
+          // Occasionally update text if it's a generator (reduced frequency)
+          if (newEl.isGenerator && newEl.generator && Math.random() < 0.05) {
+            newEl.text = newEl.generator();
+          }
+
+          updated.push(newEl);
+        }
+
+        return updated;
+      });
+
+      // Spawn new elements periodically (slower rate)
+      spawnTimerRef.current += deltaTime;
+      const targetElementCount = 20; // Reduced from 25
+      const currentCount = elementsRef.current.filter(e => e.state !== "gone").length;
+
+      if (currentCount < targetElementCount && spawnTimerRef.current > 1200) {
+        spawnElement();
+        spawnTimerRef.current = 0;
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
     };
-    const frameId = window.requestAnimationFrame(syncFromViewport);
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [spawnElement]);
+
+  // Initial spawn and resize handling
+  useEffect(() => {
+    const initElements = () => {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+      // Spawn initial batch (reduced count)
+      const initial: OrbitalElement[] = [];
+      for (let i = 0; i < 15; i++) {
+        initial.push(createNewElement());
+      }
+      setElements(initial);
+    };
+
+    const frameId = window.requestAnimationFrame(initElements);
 
     const handleResize = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements());
     };
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -381,22 +347,13 @@ export default function BitcoinBackground() {
 
     const resetParallax = () => setParallax({ x: 0, y: 0 });
 
-    // Update dynamic elements every 0.3 seconds using direct DOM manipulation
-    const updateInterval = setInterval(() => {
-      elementsRef.current.forEach((el, index) => {
-        if (el.isDynamic && el.generator && divRefs.current[index]) {
-          divRefs.current[index]!.textContent = el.generator();
-        }
-      });
-    }, 300);
-
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerleave", resetParallax);
     window.addEventListener("blur", resetParallax);
     window.addEventListener("resize", handleResize);
+
     return () => {
       window.cancelAnimationFrame(frameId);
-      clearInterval(updateInterval);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", resetParallax);
       window.removeEventListener("blur", resetParallax);
@@ -426,31 +383,38 @@ export default function BitcoinBackground() {
         overflow: "hidden",
         zIndex: 0,
         fontFamily: '"SF Mono", "Roboto Mono", Menlo, monospace',
-        transform: `translateY(-${BACKGROUND_UPSHIFT_PERCENT}%)`,
       }}
     >
-      {elements.map((el, index) => {
+      {elements.map((el) => {
+        // Calculate position based on orbit
+        const x = CENTER_X + Math.cos(el.angle) * el.radius;
+        const y = CENTER_Y + Math.sin(el.angle) * el.radius * 0.6; // 0.6 to account for aspect ratio
+
+        // Check if element is in exclusion zone (hero content area)
+        // and set opacity to 0 if it is
+        const isInZone = isInExclusionZone(x, y);
+        const effectiveOpacity = isInZone ? 0 : el.opacity;
+
         const html = renderContent(el.text);
         return (
           <div
-            key={index}
-            ref={(node) => { divRefs.current[index] = node; }}
+            key={el.id}
             style={{
               position: "absolute",
-              top: el.top,
-              left: el.left,
+              left: `${x}%`,
+              top: `${y}%`,
+              transform: `translate(-50%, -50%) translate(${(parallax.x * (1 + el.zIndex)).toFixed(2)}px, ${(parallax.y * (1 + el.zIndex)).toFixed(2)}px)`,
               whiteSpace: "nowrap",
               fontSize: el.fontSize,
               letterSpacing: "0.05em",
-              opacity: el.opacity,
+              opacity: effectiveOpacity,
               fontWeight: el.fontWeight,
               zIndex: el.zIndex,
-              color: colors[index % colors.length],
+              color: colors[parseInt(el.id, 36) % colors.length],
               pointerEvents: "none",
               userSelect: "none",
-              transform: `translate(${(parallax.x * (2.4 + el.zIndex * 2.7)).toFixed(2)}px, ${(parallax.y * (2.4 + el.zIndex * 2.7)).toFixed(2)}px)`,
-              transition: "transform 120ms ease-out",
-              willChange: "transform",
+              transition: "opacity 100ms ease-out",
+              willChange: "transform, opacity",
             }}
             dangerouslySetInnerHTML={html}
           >
