@@ -22,12 +22,12 @@ function FuzzyText({
   const revealedIndicesRef = useRef<Set<number>>(new Set());
   const ref = useRef<HTMLSpanElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   // Measure character widths on mount
   useEffect(() => {
     if (!measureRef.current) return;
-    
+
     const widths: number[] = [];
     for (let i = 0; i < text.length; i++) {
       if (text[i] === " ") {
