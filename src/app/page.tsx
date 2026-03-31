@@ -620,7 +620,7 @@ export default function Home() {
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="space-y-2">
               <p className="section-kicker">Impact</p>
-              <h2 className="section-title">Student impact at protocol scale.</h2>
+              <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Student impact at protocol scale.</h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-(--muted)">
               Trading and investing through research, strategy, and student-led deployments.
@@ -654,7 +654,7 @@ export default function Home() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
             <div>
               <p className="section-kicker">Travel</p>
-              <h2 className="section-title">Conferences Attended</h2>
+              <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Conferences Attended</h2>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -682,20 +682,35 @@ export default function Home() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
             <div>
               <p className="section-kicker">Projects</p>
-              <h2 className="section-title">Data Analysis, MEV, etc.</h2>
+              <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Data Analysis, MEV, etc.</h2>
             </div>
             <p className="max-w-sm text-sm text-(--muted)">Built by members and published for portfolio-ready <strong>PoW.</strong></p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {projects.map((project) => (
-              <article key={project.title} className="section-shell flex h-full flex-col p-6">
+              <article
+                key={project.title}
+                className={`section-shell flex h-full flex-col p-6 group ${
+                  project.title === "Mainstreet Dune" ? "section-shell-theme-hover" : ""
+                }`}
+              >
                 <h3 className="text-xl font-medium text-[#22131a]">{project.title}</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-(--muted)">{project.description}</p>
                 <div className="mt-6 flex gap-3 text-sm font-semibold">
-                  <a className="btn-swipe btn-swipe-orange" href={project.website} target="_blank" rel="noopener noreferrer">
+                  <a 
+                    className={`btn-swipe btn-swipe-orange ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bfb48] group-hover:border-[#2bfb48] transition-colors duration-500" : ""}`} 
+                    href={project.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
                     [Website]
                   </a>
-                  <a className="btn-swipe btn-swipe-ghost" href={project.repo} target="_blank" rel="noopener noreferrer">
+                  <a 
+                    className={`btn-swipe btn-swipe-ghost ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bbcfb] group-hover:text-white group-hover:border-[#2bbcfb] transition-colors duration-500" : ""}`} 
+                    href={project.repo} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
                     [GitHub]
                   </a>
                 </div>
@@ -708,7 +723,7 @@ export default function Home() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
             <div>
               <p className="section-kicker">Leadership</p>
-              <h2 className="section-title">Meet the team</h2>
+              <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Meet the team</h2>
             </div>
             <p className="text-sm text-(--muted)">4 officers currently leading VT Blockchain.</p>
           </div>
