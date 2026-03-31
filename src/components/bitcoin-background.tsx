@@ -1,6 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
+// Random generators for dynamic noise text
+function randomHex(length: number): string {
+  return Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join("");
+}
+
+function randomBinary(length: number): string {
+  return Array.from({ length }, () => (Math.random() > 0.5 ? "1" : "0")).join("");
+}
+
+function randomBytes(n: number): string {
+  return `0x${randomHex(n * 2)}`;
+}
+
+function randomHash(): string {
+  return `0x${randomHex(64)}`;
+}
+
+function generateRandomTxIn(): string {
+  const hash = randomHex(16);
+  const index = Math.floor(Math.random() * 10);
+  const scriptSig = randomHex(Math.floor(Math.random() * 40 + 20));
+  return `TxIn: [${hash}...] [${index}] [${scriptSig.substring(0, 20)}...]`;
+}
+
+function generateRandomTxOut(): string {
+  const value = (Math.random() * 10).toFixed(8);
+  const scriptPubKey = randomHex(Math.floor(Math.random() * 40 + 20));
+  return `TxOut: [${value}] [${scriptPubKey.substring(0, 16)}...]`;
+}
+
+function generateMerkleRoot(): string {
+  return `Merkle: 0x${randomHex(32)}`;
+}
+
+function generateBlockHeader(): string {
+  return `H(Block_Header) = 0x${randomHex(64)}`;
+}
+
+function generateTarget(): string {
+  return `target: 0x${randomHex(64).replace(/0/g, "0").substring(0, 16)}...`;
+}
 
 type NoiseElement = {
   text: string;
@@ -10,6 +52,8 @@ type NoiseElement = {
   opacity: number;
   fontWeight: "normal" | "bold";
   zIndex: number;
+  isDynamic: boolean;
+  generator?: () => string;
 };
 
 type PlacementBox = {
@@ -27,46 +71,45 @@ type ForbiddenZone = {
 };
 
 const coreMath = [
-  "p = Pr[honest finds next block]",
-  "q = Pr[attacker finds next block]",
-  "qᶻ = (q/p)ᶻ",
-  "λ = z · (q/p)",
-  "1 − Σ(k=0→z) ((λᵏ e⁻ˡ) / k!) · (1 − (q/p)ᶻ⁻ᵏ)",
-  "P < 10⁻³",
+  () => "p = Pr[honest finds next block]",
+  () => "q = Pr[attacker finds next block]",
+  () => `qᶻ = (${(Math.random() * 0.5).toFixed(2)}/${(Math.random() * 0.5 + 0.5).toFixed(2)})ᶻ`,
+  () => `λ = ${Math.floor(Math.random() * 100)} · (q/p)`,
+  () => `1 − Σ(k=0→${Math.floor(Math.random() * 10 + 5)}) ((λᵏ e⁻ˡ) / k!) · (1 − (q/p)ᶻ⁻ᵏ)`,
+  () => `P < 10⁻${Math.floor(Math.random() * 5 + 1)}`,
 ];
 
-const cryptoNoise = [
-  "0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
-  "01101001 01101110 01110000 01110101 01110100",
-  "SHA-256(SHA-256(Block_Header))",
-  "Merkle Root",
-  "TxIn: [Previous_Tx_Hash] [Index] [ScriptSig]",
-  "TxOut: [Value] [ScriptPubKey]",
+const cryptoGenerators = [
+  () => randomHash(),
+  () => `${randomBinary(8)} ${randomBinary(8)} ${randomBinary(8)} ${randomBinary(8)}`,
+  () => `SHA-256(${randomBytes(32).substring(0, 20)}...)`,
+  () => generateMerkleRoot(),
+  () => generateRandomTxIn(),
+  () => generateRandomTxOut(),
 ];
 
 const structuralNoise = ["+", "−", "||", "::", "{ }", "[ ]", "Σ", "∫", "⇒", "0x", "11", "π", "Δ"];
 const BACKGROUND_UPSHIFT_PERCENT = 6;
 
 const extendedCryptoNoise = [
-  ...cryptoNoise,
-  "ECDSA(secp256k1)",
-  "nBits · target ≤ hash",
-  "nonce ∈ [0, 2^32)",
-  "block.height + 1",
-  "MTP = median(time[11])",
-  "TxID = H(H(tx))",
-  "UTXO[i] -> spendable",
-  "scriptSig || scriptPubKey",
-  "nLockTime >= height",
-  "difficulty = D_0 · 2^(−n)",
-  "merkle = H(left || right)",
-  "prevHash || merkleRoot",
-  "version | time | bits | nonce",
-  "coinbase -> subsidy + fees",
-  "satoshis = 10^8",
-  "opcodes: DUP HASH160 EQUALVERIFY CHECKSIG",
-  "witnessRoot",
-  "weight = base*3 + total",
+  () => "ECDSA(secp256k1)",
+  () => `nBits · target ≤ 0x${randomHex(16)}...`,
+  () => `nonce ∈ [0, 2^${Math.floor(Math.random() * 32 + 1)})`,
+  () => `block.height = ${Math.floor(Math.random() * 900000)}`,
+  () => `MTP = ${Math.floor(Math.random() * 1000 + 1600000000)}`,
+  () => `TxID = ${randomHash().substring(0, 20)}...`,
+  () => `UTXO[${Math.floor(Math.random() * 100)}] -> spendable`,
+  () => `scriptSig = ${randomHex(20)}... || scriptPubKey = ${randomHex(20)}...`,
+  () => `nLockTime >= ${Math.floor(Math.random() * 1000000)}`,
+  () => `difficulty = D_0 · 2^(−${Math.floor(Math.random() * 20)})`,
+  () => `merkle = H(${randomHex(8)} || ${randomHex(8)})`,
+  () => `prevHash || ${randomHash().substring(0, 16)}...`,
+  () => `version | time | bits | nonce = ${Math.floor(Math.random() * 4)}`,
+  () => `coinbase -> ${(Math.random() * 6 + 3).toFixed(2)} + ${(Math.random() * 2).toFixed(4)}`,
+  () => "satoshis = 10^8",
+  () => "opcodes: DUP HASH160 EQUALVERIFY CHECKSIG",
+  () => `witnessRoot = ${randomHash().substring(0, 20)}...`,
+  () => `weight = base*${Math.floor(Math.random() * 5)} + total`,
 ];
 
 const extendedStructuralNoise = [
@@ -179,7 +222,7 @@ function placeWithoutOverlap(
   return null;
 }
 
-function generateNoiseElements() {
+function generateNoiseElements(): NoiseElement[] {
   const generatedElements: NoiseElement[] = [];
   const placed: PlacementBox[] = [];
   const usedText = new Set<string>();
@@ -192,11 +235,12 @@ function generateNoiseElements() {
     { top: 80 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 20 },
   ];
 
-  const macroTerms = shuffledUnique(coreMath).slice(0, 3);
-  for (const text of macroTerms) {
+  const macroTerms = shuffledUnique(coreMath).slice(0, 5);
+  for (const generator of macroTerms) {
+    const text = generator();
     if (usedText.has(text)) continue;
     const fontSize = `${Math.floor(Math.random() * 34) + 52}px`;
-    const pos = placeWithoutOverlap(placed, forbidden, text, fontSize, 220);
+    const pos = placeWithoutOverlap(placed, forbidden, text, fontSize, 280);
     if (!pos) continue;
     usedText.add(text);
     generatedElements.push({
@@ -207,29 +251,35 @@ function generateNoiseElements() {
       opacity: 0.047,
       fontWeight: "bold",
       zIndex: 1,
+      isDynamic: true,
+      generator,
     });
   }
 
-  for (const mathStr of shuffledUnique(coreMath)) {
-    if (usedText.has(mathStr)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, mathStr, "16px", 260);
+  for (const generator of shuffledUnique(coreMath)) {
+    const text = generator();
+    if (usedText.has(text)) continue;
+    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 320);
     if (!pos) continue;
-    usedText.add(mathStr);
+    usedText.add(text);
     generatedElements.push({
-      text: mathStr,
+      text,
       top: pos.top,
       left: pos.left,
       fontSize: "16px",
       opacity: 0.67,
       fontWeight: "normal",
       zIndex: 3,
+      isDynamic: true,
+      generator,
     });
   }
 
-  const cryptoTerms = shuffledUnique(extendedCryptoNoise).slice(0, 20);
-  for (const text of cryptoTerms) {
+  const cryptoTerms = shuffledUnique([...cryptoGenerators, ...extendedCryptoNoise]).slice(0, 35);
+  for (const generator of cryptoTerms) {
+    const text = generator();
     if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "11px", 180);
+    const pos = placeWithoutOverlap(placed, forbidden, text, "11px", 240);
     if (!pos) continue;
     usedText.add(text);
     generatedElements.push({
@@ -240,13 +290,15 @@ function generateNoiseElements() {
       opacity: 0.27 + Math.random() * 0.2,
       fontWeight: "normal",
       zIndex: 2,
+      isDynamic: true,
+      generator,
     });
   }
 
-  const symbolTerms = shuffledUnique(extendedStructuralNoise).slice(0, 36);
+  const symbolTerms = shuffledUnique(extendedStructuralNoise).slice(0, 55);
   for (const text of symbolTerms) {
     if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "10px", 120);
+    const pos = placeWithoutOverlap(placed, forbidden, text, "10px", 180);
     if (!pos) continue;
     usedText.add(text);
     generatedElements.push({
@@ -257,6 +309,7 @@ function generateNoiseElements() {
       opacity: 0.17 + Math.random() * 0.14,
       fontWeight: "normal",
       zIndex: 2,
+      isDynamic: false,
     });
   }
 
@@ -267,6 +320,14 @@ export default function BitcoinBackground() {
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
   const [elements, setElements] = useState<NoiseElement[]>([]);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const elementsRef = useRef<NoiseElement[]>([]);
+  const divRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    elementsRef.current = elements;
+    // Update refs array size
+    divRefs.current = divRefs.current.slice(0, elements.length);
+  }, [elements]);
 
   useEffect(() => {
     const syncFromViewport = () => {
@@ -293,12 +354,22 @@ export default function BitcoinBackground() {
 
     const resetParallax = () => setParallax({ x: 0, y: 0 });
 
+    // Update dynamic elements every 0.3 seconds using direct DOM manipulation
+    const updateInterval = setInterval(() => {
+      elementsRef.current.forEach((el, index) => {
+        if (el.isDynamic && el.generator && divRefs.current[index]) {
+          divRefs.current[index]!.textContent = el.generator();
+        }
+      });
+    }, 300);
+
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerleave", resetParallax);
     window.addEventListener("blur", resetParallax);
     window.addEventListener("resize", handleResize);
     return () => {
       window.cancelAnimationFrame(frameId);
+      clearInterval(updateInterval);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", resetParallax);
       window.removeEventListener("blur", resetParallax);
@@ -326,6 +397,7 @@ export default function BitcoinBackground() {
       {elements.map((el, index) => (
         <div
           key={index}
+          ref={(node) => { divRefs.current[index] = node; }}
           style={{
             position: "absolute",
             top: el.top,

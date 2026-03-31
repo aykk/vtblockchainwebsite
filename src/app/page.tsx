@@ -1,4 +1,105 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import BitcoinBackground from "@/components/bitcoin-background";
+
+function useAnimatedNumber(target: number, duration: number = 2000, start: boolean = false) {
+  const [value, setValue] = useState(0);
+  const animationRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!start) {
+      setValue(0);
+      return;
+    }
+
+    const startTime = performance.now();
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setValue(target * easeOut);
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [target, duration, start]);
+
+  return value;
+}
+
+function AnimatedNumber({
+  value,
+  prefix = "",
+  suffix = "",
+  decimals = 0,
+  showSuffixAtTarget = false,
+}: {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  showSuffixAtTarget?: boolean;
+}) {
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  const animatedValue = useAnimatedNumber(value, 2000, hasStarted);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setHasStarted(true);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (animatedValue >= value && hasStarted) {
+      setIsComplete(true);
+    }
+  }, [animatedValue, value, hasStarted]);
+
+  const formattedValue = decimals > 0 ? animatedValue.toFixed(decimals) : Math.floor(animatedValue).toString();
+
+  return (
+    <span ref={ref}>
+      {prefix}
+      {formattedValue}
+      {showSuffixAtTarget ? (
+        <span
+          className="inline-block transition-opacity duration-700 ease-out"
+          style={{ opacity: isComplete ? 1 : 0 }}
+        >
+          {suffix}
+        </span>
+      ) : (
+        suffix
+      )}
+    </span>
+  );
+}
 
 export default function Home() {
   const partners = [
@@ -55,10 +156,10 @@ export default function Home() {
   ];
 
   const officers = [
-    { name: "Avery Kim", role: "President", initials: "AK" },
-    { name: "Jordan Patel", role: "VP Engineering", initials: "JP" },
-    { name: "Sam Rivera", role: "Head of Partnerships", initials: "SR" },
-    { name: "Noah Chen", role: "Head of Research", initials: "NC" },
+    { name: "Andrew Kim", role: "Co-President, Web Development", initials: "AK" },
+    { name: "Ted Sha", role: "Co-President, DeFi", initials: "TS" },
+    { name: "Kyler O'Rourke", role: "Co-President, Planning & Development", initials: "KR" },
+    { name: "Andrew C Monte", role: "Professional Advisor", initials: "AM" },
   ];
 
   return (
@@ -162,20 +263,26 @@ export default function Home() {
               <h2 className="section-title">Student impact at protocol scale.</h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-(--muted)">
-              Trading volume across 20+ protocols through research, strategy, and student-led deployments.
+              Trading and investing through research, strategy, and student-led deployments.
             </p>
           </div>
           <div className="mt-6 border-t border-(--line) pt-6">
-            <p className="text-5xl font-medium text-(--brand-maroon) md:text-6xl">$8.55m</p>
+            <p className="text-5xl font-medium text-(--brand-maroon) md:text-6xl">
+              <AnimatedNumber value={8.55} prefix="$" suffix="m" decimals={2} />
+            </p>
           </div>
           <div className="mt-7 grid grid-cols-2 gap-3 md:max-w-lg">
             <div className="border border-(--line) bg-background px-4 py-5">
-              <p className="text-xs uppercase tracking-[0.15em] text-(--muted)">Builders</p>
-              <p className="mt-2 text-3xl font-medium">150+</p>
+              <p className="text-xs uppercase tracking-[0.15em] text-(--muted)">Protocols</p>
+              <p className="mt-2 text-3xl font-medium">
+                <AnimatedNumber value={20} suffix="+" decimals={0} showSuffixAtTarget={true} />
+              </p>
             </div>
             <div className="border border-(--line) bg-background px-4 py-5">
-              <p className="text-xs uppercase tracking-[0.15em] text-(--muted)">Partners</p>
-              <p className="mt-2 text-3xl font-medium">30+</p>
+              <p className="text-xs uppercase tracking-[0.15em] text-(--muted)">Chains Covered</p>
+              <p className="mt-2 text-3xl font-medium">
+                <AnimatedNumber value={10} suffix="+" decimals={0} showSuffixAtTarget={true} />
+              </p>
             </div>
           </div>
         </section>
@@ -204,9 +311,9 @@ export default function Home() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
             <div>
               <p className="section-kicker">Projects</p>
-              <h2 className="section-title">Websites, experiments, and open-source tooling.</h2>
+              <h2 className="section-title">Chain-level data analysis, MEV</h2>
             </div>
-            <p className="max-w-sm text-sm text-(--muted)">Built by members and published for portfolio-ready proof of work.</p>
+            <p className="max-w-sm text-sm text-(--muted)">Built by members and published for portfolio-ready <strong>proof of work.</strong></p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {projects.map((project) => (
