@@ -691,7 +691,7 @@ export default function Home() {
               <article
                 key={project.title}
                 className={`section-shell flex h-full flex-col p-6 group ${
-                  project.title === "Mainstreet Dune" ? "section-shell-theme-hover" : ""
+                  project.title === "Mainstreet Dune" ? "mainstreet-hover" : ""
                 } ${project.title === "Aerostrategy" ? "aerostrategy-hover" : ""}`}
               >
                 <h3 className="text-xl font-medium text-[#22131a]">{project.title}</h3>

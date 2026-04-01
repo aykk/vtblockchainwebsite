@@ -215,6 +215,152 @@ html {
   color: #ffffff;
 }
 
+/* Mainstreet Dune parametric wave / wireframe mesh effect */
+.mainstreet-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.mainstreet-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Uneven vortex contour lines - blue to green sweep */
+    repeating-radial-gradient(
+      ellipse 80% 120% at 30% 50%,
+      transparent 0px,
+      transparent 3px,
+      rgba(43, 108, 176, 0.2) 3px,
+      rgba(43, 108, 176, 0.2) 4px,
+      transparent 4px,
+      transparent 22px
+    ),
+    repeating-radial-gradient(
+      ellipse 100% 80% at 70% 60%,
+      transparent 0px,
+      transparent 2px,
+      rgba(56, 161, 105, 0.15) 2px,
+      rgba(56, 161, 105, 0.15) 3px,
+      transparent 3px,
+      transparent 18px
+    ),
+    repeating-radial-gradient(
+      ellipse 120% 90% at 50% 40%,
+      transparent 0px,
+      transparent 4px,
+      rgba(66, 153, 225, 0.12) 4px,
+      rgba(66, 153, 225, 0.12) 5px,
+      transparent 5px,
+      transparent 28px
+    ),
+    /* Intersecting diagonal sweeps */
+    repeating-linear-gradient(
+      125deg,
+      transparent 0px,
+      transparent 6px,
+      rgba(43, 108, 176, 0.08) 6px,
+      rgba(43, 108, 176, 0.08) 7px,
+      transparent 7px,
+      transparent 32px
+    ),
+    repeating-linear-gradient(
+      55deg,
+      transparent 0px,
+      transparent 8px,
+      rgba(47, 133, 90, 0.06) 8px,
+      rgba(47, 133, 90, 0.06) 9px,
+      transparent 9px,
+      transparent 26px
+    ),
+    /* White base background */
+    #ffffff;
+}
+
+.mainstreet-hover::after {
+  content: '\0393 \0394 \0398 \03BD';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 1.4rem;
+  color: rgba(43, 108, 176, 0.4);
+  letter-spacing: 2.5em;
+  line-height: 2.5;
+  text-align: center;
+  white-space: pre-wrap;
+  padding: 2rem;
+  background:
+    /* Subtle blue-green glow overlay */
+    radial-gradient(ellipse 70% 50% at 40% 45%, rgba(43, 108, 176, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 70% at 65% 55%, rgba(56, 161, 105, 0.06) 0%, transparent 50%);
+}
+
+.mainstreet-hover:hover::before,
+.mainstreet-hover:hover::after {
+  opacity: 1;
+}
+
+.mainstreet-hover:hover {
+  border-color: rgba(56, 161, 105, 0.4);
+  box-shadow: 
+    0 20px 60px rgba(10, 22, 40, 0.12),
+    0 0 40px rgba(56, 161, 105, 0.15),
+    inset 0 0 80px rgba(43, 108, 176, 0.05);
+  transition: border-color 800ms ease, box-shadow 800ms ease;
+}
+
+/* Ensure text stays above the background effect */
+.mainstreet-hover > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text turns dark on hover for contrast against white - exclude buttons */
+.mainstreet-hover:hover h3,
+.mainstreet-hover:hover .section-kicker,
+.mainstreet-hover:hover p:not(.btn-brutal):not(.btn-swipe):not(.btn-ghost) {
+  color: #0a1628;
+  transition: color 400ms ease;
+}
+
+/* Buttons adapt to parametric theme on hover */
+.mainstreet-hover:hover .btn-swipe-ghost {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(43, 108, 176, 0.5);
+  color: #2b6cb0;
+  transition: background-color 800ms ease, border-color 800ms ease, color 800ms ease;
+}
+
+.mainstreet-hover:hover .btn-swipe-ghost::before {
+  background: rgba(43, 108, 176, 0.2);
+}
+
+.mainstreet-hover:hover .btn-swipe-orange {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(56, 161, 105, 0.6);
+  color: #38a169;
+  transition: background-color 800ms ease, border-color 800ms ease, color 800ms ease;
+}
+
+.mainstreet-hover:hover .btn-swipe-orange::before {
+  background: rgba(56, 161, 105, 0.25);
+}
+
+.mainstreet-hover:hover .btn-swipe-orange:hover {
+  color: #2f855a;
+}
+
 .section-kicker {
   font-size: 0.7rem;
   text-transform: uppercase;
