@@ -631,7 +631,7 @@ export default function Home() {
               <AnimatedNumber value={8.55} prefix="$" suffix="m+" decimals={2} />
             </p>
             <p className="mt-1 text-sm text-(--brand-maroon)/60">
-              Cumulative on-chain volume
+              Cumulative personal on-chain volume
             </p>
           </div>
           <div className="mt-7 grid grid-cols-2 gap-3 md:max-w-lg">
@@ -646,6 +646,18 @@ export default function Home() {
               <p className="mt-2 text-3xl font-medium">
                 <AnimatedNumber value={10} suffix="+" decimals={0} showSuffixAtTarget={true} />
               </p>
+            </div>
+          </div>
+          <div className="mt-6 border-t border-(--line) pt-6">
+            <p className="text-5xl font-medium text-(--brand-maroon) md:text-6xl">
+              <AnimatedNumber value={10} prefix="$" suffix="b+" decimals={0} />
+            </p>
+            <p className="mt-1 text-sm text-(--brand-maroon)/60">
+              Volume routed through our contracts
+            </p>
+            <div className="mt-4 flex items-center gap-4">
+              <img src="/kwenta.svg" alt="Kwenta" className="h-8 w-auto" />
+              <img src="/aerostrat.svg" alt="Aerostrategy" className="h-8 w-auto" />
             </div>
           </div>
         </section>
@@ -690,27 +702,25 @@ export default function Home() {
             {projects.map((project) => (
               <article
                 key={project.title}
-                className={`section-shell flex h-full flex-col p-6 group ${
-                  project.title === "Mainstreet Dune" ? "mainstreet-hover" : ""
-                } ${project.title === "Aerostrategy" ? "aerostrategy-hover" : ""} ${
-                  project.title === "MEV Uniswap Fee Extractor" ? "mev-hover" : ""
-                }`}
+                className={`section-shell flex h-full flex-col p-6 group ${project.title === "Mainstreet Dune" ? "mainstreet-hover" : ""
+                  } ${project.title === "Aerostrategy" ? "aerostrategy-hover" : ""} ${project.title === "MEV Uniswap Fee Extractor" ? "mev-hover" : ""
+                  }`}
               >
                 <h3 className="text-xl font-medium text-[#22131a]">{project.title}</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-(--muted)">{project.description}</p>
                 <div className="mt-6 flex gap-3 text-sm font-semibold">
-                  <a 
-                    className={`btn-swipe btn-swipe-orange ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bfb48] group-hover:border-[#2bfb48] transition-colors duration-500" : ""}`} 
-                    href={project.website} 
-                    target="_blank" 
+                  <a
+                    className={`btn-swipe btn-swipe-orange ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bfb48] group-hover:border-[#2bfb48] transition-colors duration-500" : ""}`}
+                    href={project.website}
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     [Website]
                   </a>
-                  <a 
-                    className={`btn-swipe btn-swipe-ghost ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bbcfb] group-hover:text-white group-hover:border-[#2bbcfb] transition-colors duration-500" : ""}`} 
-                    href={project.repo} 
-                    target="_blank" 
+                  <a
+                    className={`btn-swipe btn-swipe-ghost ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bbcfb] group-hover:text-white group-hover:border-[#2bbcfb] transition-colors duration-500" : ""}`}
+                    href={project.repo}
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     [GitHub]
