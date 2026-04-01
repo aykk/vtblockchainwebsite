@@ -719,6 +719,12 @@ export default function Home() {
               </article>
             ))}
           </div>
+          <div className="flex flex-col items-start gap-0 pt-2 pl-2">
+            <svg className="h-4 w-4 text-(--brand-orange)" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+            <span className="text-sm font-medium text-(--brand-maroon)">Hover us!</span>
+          </div>
         </section>
 
         <section id="leadership" className="space-y-6">
