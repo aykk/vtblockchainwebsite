@@ -600,7 +600,7 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-x-0 bottom-8 z-3 px-6 md:bottom-7 md:px-10 lg:px-14">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-4 text-(--brand-maroon)">
             <span className="text-base md:text-lg uppercase tracking-[0.16em] font-normal">
-              <FuzzyText text="[Experiences]" scrambleSpeed={30} revealDuration={800} />
+              <FuzzyText text="[Active on]" scrambleSpeed={30} revealDuration={800} />
             </span>
             <div className="logo-belt flex-1 bg-[rgba(255,255,255,0.62)]">
               <div className="logo-track">
@@ -655,7 +655,7 @@ export default function Home() {
             <p className="mt-1 text-sm text-(--brand-maroon)/60">
               Volume routed through our contracts
             </p>
-            <div className="mt-4 flex items-center gap-4">
+            <div className="mt-4 flex flex-wrap items-center gap-4">
               <img src="/kwenta.svg" alt="Kwenta" className="h-8 w-auto" />
               <img src="/aerostrat.svg" alt="Aerostrategy" className="h-8 w-auto" />
             </div>

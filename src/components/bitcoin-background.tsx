@@ -97,7 +97,7 @@ const cryptoGenerators = [
 ];
 
 const structuralNoise = ["+", "−", "||", "::", "{ }", "[ ]", "Σ", "∫", "⇒", "0x", "11", "π", "Δ"];
-const BACKGROUND_UPSHIFT_PERCENT = 2;
+const BACKGROUND_UPSHIFT_PERCENT = 3;
 
 const extendedCryptoNoise = [
   () => "ECDSA(secp256k1)",
@@ -230,20 +230,27 @@ function placeWithoutOverlap(
   return null;
 }
 
-function generateNoiseElements(): NoiseElement[] {
+function generateNoiseElements(width: number): NoiseElement[] {
+  const isMobile = width < 575;
   const generatedElements: NoiseElement[] = [];
   const placed: PlacementBox[] = [];
   const usedText = new Set<string>();
   const forbidden: ForbiddenZone[] = [
     // Navbar zone
-    { top: 0 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 18 },
+    { top: 0 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 4 },
     // Main hero content safe area
     { top: 26 + BACKGROUND_UPSHIFT_PERCENT, left: 20, width: 60, height: 44 },
     // Backed-by belt zone
     { top: 80 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 20 },
   ];
 
-  const macroTerms = shuffledUnique(coreMath).slice(0, 5);
+  // Reduced counts for mobile
+  const macroTermsCount = isMobile ? 1 : 5;
+  const cryptoTermsCount = isMobile ? 2 : 35;
+  const symbolTermsCount = isMobile ? 2 : 55;
+  const dynamicMathCount = isMobile ? 1 : 4;
+
+  const macroTerms = shuffledUnique(coreMath).slice(0, macroTermsCount);
   for (const generator of macroTerms) {
     const text = generator();
     if (usedText.has(text)) continue;
@@ -283,7 +290,7 @@ function generateNoiseElements(): NoiseElement[] {
     });
   }
 
-  for (const generator of shuffledUnique(dynamicMath).slice(0, 4)) {
+  for (const generator of shuffledUnique(dynamicMath).slice(0, dynamicMathCount)) {
     const text = generator();
     if (usedText.has(text)) continue;
     const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 200);
@@ -302,7 +309,7 @@ function generateNoiseElements(): NoiseElement[] {
     });
   }
 
-  const cryptoTerms = shuffledUnique([...cryptoGenerators, ...extendedCryptoNoise]).slice(0, 35);
+  const cryptoTerms = shuffledUnique([...cryptoGenerators, ...extendedCryptoNoise]).slice(0, cryptoTermsCount);
   for (const generator of cryptoTerms) {
     const text = generator();
     if (usedText.has(text)) continue;
@@ -322,7 +329,7 @@ function generateNoiseElements(): NoiseElement[] {
     });
   }
 
-  const symbolTerms = shuffledUnique(extendedStructuralNoise).slice(0, 55);
+  const symbolTerms = shuffledUnique(extendedStructuralNoise).slice(0, symbolTermsCount);
   for (const text of symbolTerms) {
     if (usedText.has(text)) continue;
     const pos = placeWithoutOverlap(placed, forbidden, text, "10px", 180);
@@ -359,13 +366,13 @@ export default function BitcoinBackground() {
   useEffect(() => {
     const syncFromViewport = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements());
+      setElements(generateNoiseElements(window.innerWidth));
     };
     const frameId = window.requestAnimationFrame(syncFromViewport);
 
     const handleResize = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements());
+      setElements(generateNoiseElements(window.innerWidth));
     };
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
