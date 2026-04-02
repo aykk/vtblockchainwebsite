@@ -504,6 +504,7 @@ html {
 .btn-swipe {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   z-index: 1;
   padding: 0.72rem 1.1rem;
   font-size: 0.78rem;
@@ -545,6 +546,11 @@ html {
 
 .btn-swipe-orange:hover::before {
   left: -50%;
+}
+
+/* When a .btn-swipe is hovered, trigger glow on parent .btn-swipe-glow */
+.btn-swipe-glow:has(> .btn-swipe:hover)::after {
+  opacity: 0.75;
 }
 
 .btn-swipe-maroon {
@@ -589,10 +595,58 @@ html {
   border: 1px solid var(--line-strong);
 }
 
-.btn-swipe-ghost::before {
-  background: var(--brand-maroon);
+/* ── Glow wrapper (lives OUTSIDE the button's overflow:hidden) ── */
+/* @TODO: MAKE THIS UNDERGLOW WORK PLEASE LOL
+.btn-swipe-glow {
+  position: relative;
+  display: inline-block;
+  pointer-events: none;
 }
 
+.btn-swipe-glow>* {
+  pointer-events: auto;
+}
+
+.btn-swipe-glow::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 8%;
+  right: 8%;
+  height: 45%;
+  z-index: -1;
+  border-radius: 4px;
+  background: linear-gradient(90deg,
+      #a40038 0%,
+      #a83a4f 20%,
+      #c0554e 35%,
+      #d4724a 50%,
+      #c0554e 65%,
+      #a83a4f 80%,
+      #a40038 100%);
+  background-size: 200% auto;
+  filter: blur(12px);
+  opacity: 0;
+  animation: animateGlow 2s linear infinite;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.btn-swipe-glow:hover::after {
+  opacity: 0.75;
+}
+
+@keyframes animateGlow {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+*/
+/* ── Ghost variant ── */
 .btn-swipe-ghost:hover {
   color: #fff;
   border-color: var(--brand-maroon);

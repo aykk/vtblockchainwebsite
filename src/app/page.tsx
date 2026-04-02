@@ -133,11 +133,13 @@ function FuzzyText({
   className = "",
   scrambleSpeed = 50,
   revealDuration = 1500,
+  scrambleInterval = 10, // Only scramble every N frames to reduce letter changes
 }: {
   text: string;
   className?: string;
   scrambleSpeed?: number;
   revealDuration?: number;
+  scrambleInterval?: number;
 }) {
   const [displayText, setDisplayText] = useState("");
   const [hasStarted, setHasStarted] = useState(false);
@@ -147,7 +149,8 @@ function FuzzyText({
   const revealedIndicesRef = useRef<Set<number>>(new Set());
   const ref = useRef<HTMLSpanElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const chars = "abvcdefghijklmnopqrstuvwxyz0123456789`";
+  const frameCounterRef = useRef(0);
 
   // Measure character widths on mount
   useEffect(() => {
@@ -211,6 +214,13 @@ function FuzzyText({
     let animationId: number;
 
     const animate = () => {
+      frameCounterRef.current++;
+      // Only scramble every N frames to reduce letter changes
+      if (frameCounterRef.current % scrambleInterval !== 0) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+
       const elapsed = performance.now() - revealStartTime;
       const progress = Math.min(elapsed / revealDuration, 1);
 
@@ -535,7 +545,13 @@ export default function Home() {
                 Team
               </a>
             </div>
-            <a href="#leadership" className="btn-brutal btn-maroon pointer-events-auto ml-2">
+            {/*@TODO: Fix/add underglow*/}
+            <a
+              href="https://discord.gg/H8sJTxWHnE"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-swipe btn-swipe-maroon pointer-events-auto ml-2"
+            >
               Join Us
             </a>
           </div>
@@ -567,17 +583,17 @@ export default function Home() {
               />
               <h1 className="w-fit text-left leading-[0.95]">
                 <span className="block font-[Georgia,Times,serif] text-[clamp(1rem,2.1vw,1.5rem)] font-normal tracking-[0.08em] text-[rgba(134,31,65,0.9)]">
-                  <FuzzyText text="Virginia Tech" scrambleSpeed={40} revealDuration={1200} />
+                  <FuzzyText text="Virginia Tech" scrambleSpeed={600} revealDuration={1100} />
                 </span>
                 <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]" style={{ fontFamily: "var(--font-neco), sans-serif" }}>
                   <SparkleText sparkleCount={4} color="#CE4C00">
                     <span className="shiny-text">
-                      <FuzzyText text="Block" scrambleSpeed={40} revealDuration={1500} />
+                      <FuzzyText text="Block" scrambleSpeed={600} revealDuration={1100} />
                     </span>
                   </SparkleText>
                   <SparkleText sparkleCount={4} color="#861F41">
                     <span className="shiny-text">
-                      <FuzzyText text="chain" scrambleSpeed={40} revealDuration={1500} />
+                      <FuzzyText text="chain" scrambleSpeed={600} revealDuration={1100} />
                     </span>
                   </SparkleText>
                 </span>
