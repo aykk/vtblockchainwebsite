@@ -754,3 +754,90 @@ html {
   -webkit-text-fill-color: transparent;
   animation: shine 4s linear infinite;
 }
+
+/* ── Join Us button (fully standalone) ── */
+.join-us-btn-shell {
+  position: relative;
+  display: inline-block;
+}
+
+.join-us-btn-shell::after {
+  position: absolute;
+  content: "";
+  inset: 0;
+  z-index: -1;
+  border-radius: 0;
+  transform: scale(1.12) translateZ(0);
+  filter: blur(15px);
+  background: linear-gradient(
+    to left,
+    var(--brand-orange),
+    #b33d00,
+    var(--brand-maroon),
+    #6b1833,
+    #4a0f25,
+    #6b1833,
+    var(--brand-maroon),
+    #b33d00,
+    var(--brand-orange)
+  );
+  background-size: 200% 200%;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.12s ease;
+  animation: join-us-glow 1.25s linear infinite;
+}
+
+.join-us-btn-shell:hover::after {
+  opacity: 1;
+  transform: translate(2px, -2px) scale(1.12) translateZ(0);
+}
+
+.join-us-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: inline-block;
+  padding: 11px 17px;
+  color: #ffffff;
+  border-radius: 0;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--brand-maroon);
+  border: 2px solid var(--brand-maroon);
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.12s ease;
+}
+
+.join-us-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -200%;
+  width: 200%;
+  height: 100%;
+  transform: skewX(-25deg);
+  transition: left 0.8s ease;
+  z-index: -1;
+  background: #ffffff;
+}
+
+.join-us-btn:hover::before {
+  left: -50%;
+}
+
+.join-us-btn:hover {
+  background-color: #ffffff;
+  color: var(--brand-maroon);
+  transform: translate(2px, -2px);
+}
+
+@keyframes join-us-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}

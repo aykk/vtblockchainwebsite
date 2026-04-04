@@ -546,14 +546,16 @@ export default function Home() {
               </a>
             </div>
             {/*@TODO: Fix/add underglow*/}
-            <a
-              href="https://discord.gg/H8sJTxWHnE"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-swipe btn-swipe-maroon pointer-events-auto ml-2"
-            >
-              Join Us
-            </a>
+            <span className="join-us-btn-shell ml-2 pointer-events-auto">
+              <a
+                href="https://discord.gg/H8sJTxWHnE"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="join-us-btn"
+              >
+                Join Us
+              </a>
+            </span>
           </div>
         </nav>
       </header>
