@@ -1,10 +1,10 @@
 {
   "query_id": 0,
   "state": "QUERY_STATE_COMPLETED",
-  "submitted_at": "2026-04-19T01:58:25.329007Z",
-  "expires_at": "2026-07-18T01:58:51.878066Z",
-  "execution_started_at": "2026-04-19T01:58:36.854128Z",
-  "execution_ended_at": "2026-04-19T01:58:51.878058Z",
+  "submitted_at": "2026-04-26T02:01:23.926871Z",
+  "expires_at": "2026-07-25T02:02:01.063649Z",
+  "execution_started_at": "2026-04-26T02:01:34.693985Z",
+  "execution_ended_at": "2026-04-26T02:02:01.06364Z",
   "result": {
     "metadata": {
       "column_names": [
@@ -14,7 +14,7 @@
         "avg_balance_usd",
         "last_updated_date"
       ],
-      "result_set_bytes": 3302,
+      "result_set_bytes": 3312,
       "row_count": 50,
       "total_result_set_bytes": 1618,
       "total_row_count": 50,
@@ -22,353 +22,353 @@
     },
     "rows": [
       {
-        "avg_balance_usd": 1393.4778150187385,
-        "holder_count": 74190245,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 106189812463.1208,
+        "avg_balance_usd": 1423.4144138778186,
+        "holder_count": 74866270,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 109386328825.03404,
         "token_symbol": "USDT"
       },
       {
-        "avg_balance_usd": 1818.858328751741,
-        "holder_count": 34699853,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 71523562647.03654,
+        "avg_balance_usd": 1798.7849544177484,
+        "holder_count": 34938052,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 71186011581.03528,
         "token_symbol": "USDC"
       },
       {
-        "avg_balance_usd": 161725.606873496,
-        "holder_count": 50976,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 8360728698.539123,
+        "avg_balance_usd": 154719.27518727822,
+        "holder_count": 51173,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 8030703978.595676,
         "token_symbol": "USDS"
       },
       {
-        "avg_balance_usd": 35126.90454093637,
-        "holder_count": 164680,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 6687143944.362597,
-        "token_symbol": "USDe"
-      },
-      {
-        "avg_balance_usd": 985.7275429931339,
-        "holder_count": 5241843,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 5383605191.071865,
+        "avg_balance_usd": 990.9643885463894,
+        "holder_count": 5270566,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 5440851327.702798,
         "token_symbol": "DAI"
       },
       {
-        "avg_balance_usd": 7163.153975442632,
-        "holder_count": 473097,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 3401430828.3929095,
+        "avg_balance_usd": 23319.835354705843,
+        "holder_count": 165712,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 4465235434.048366,
+        "token_symbol": "USDe"
+      },
+      {
+        "avg_balance_usd": 7471.768429509897,
+        "holder_count": 475047,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 3562621376.6430435,
         "token_symbol": "USD1"
       },
       {
-        "avg_balance_usd": 42845.95245894329,
-        "holder_count": 77400,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 3325574292.0058017,
+        "avg_balance_usd": 34570.684173317306,
+        "holder_count": 79419,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 2753001863.4579506,
         "token_symbol": "PYUSD"
       },
       {
-        "avg_balance_usd": 295.8789221600379,
-        "holder_count": 7807165,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 2319080351.518281,
+        "avg_balance_usd": 282.79657108699485,
+        "holder_count": 7843287,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 2226930522.831339,
         "token_symbol": "USDT0"
       },
       {
-        "avg_balance_usd": 21918.134169960987,
-        "holder_count": 95483,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 2092809204.9503849,
+        "avg_balance_usd": 21905.976545690282,
+        "holder_count": 95486,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 2091714076.4417822,
         "token_symbol": "crvUSD"
       },
       {
-        "avg_balance_usd": 1385.3712779677699,
-        "holder_count": 1333365,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 1847205574.0474956,
+        "avg_balance_usd": 1385.596778487787,
+        "holder_count": 1333148,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 1847205574.0474365,
         "token_symbol": "USDt"
       },
       {
-        "avg_balance_usd": 156903.3692520159,
-        "holder_count": 10739,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 1739430751.5278482,
+        "avg_balance_usd": 157498.34905119886,
+        "holder_count": 10697,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 1739884261.9685938,
         "token_symbol": "USDf"
       },
       {
-        "avg_balance_usd": 374.73503690871297,
-        "holder_count": 4212144,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 1597495837.0768802,
+        "avg_balance_usd": 341.6089591130246,
+        "holder_count": 4215362,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 1457384439.2905135,
         "token_symbol": "USD₮0"
       },
       {
-        "avg_balance_usd": 119244.01749338894,
-        "holder_count": 8916,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 1063179659.9710557,
+        "avg_balance_usd": 128096.3104947029,
+        "holder_count": 9240,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 1183609908.9710548,
         "token_symbol": "RLUSD"
       },
       {
-        "avg_balance_usd": 17753.478005086086,
-        "holder_count": 53457,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 951231351.5125126,
+        "avg_balance_usd": 19573.512601551858,
+        "holder_count": 55650,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 1091810532.9145627,
         "token_symbol": "USDG"
       },
       {
-        "avg_balance_usd": 2962.9422222230037,
-        "holder_count": 293407,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 869347988.5957848,
-        "token_symbol": "USDtb"
-      },
-      {
-        "avg_balance_usd": 21322.0121163994,
-        "holder_count": 39781,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 848210964.0024846,
+        "avg_balance_usd": 21329.534495021104,
+        "holder_count": 39767,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 848211598.2635043,
         "token_symbol": "USDC.n"
       },
       {
-        "avg_balance_usd": 51.32332921276103,
-        "holder_count": 12078193,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 619900517.5170016,
+        "avg_balance_usd": 50.61951634411263,
+        "holder_count": 12246119,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 619900517.5169979,
         "token_symbol": "USD₮"
       },
       {
-        "avg_balance_usd": 21517.36524817501,
-        "holder_count": 26015,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 589769464.0872289,
+        "avg_balance_usd": 2006.8952235128124,
+        "holder_count": 293499,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 589021741.205787,
+        "token_symbol": "USDtb"
+      },
+      {
+        "avg_balance_usd": 21191.929710754797,
+        "holder_count": 26251,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 586550230.5342712,
         "token_symbol": "GHO"
       },
       {
-        "avg_balance_usd": 4446.121988979249,
-        "holder_count": 125613,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 558490721.4016504,
+        "avg_balance_usd": 4443.383996525429,
+        "holder_count": 125499,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 557640248.1799449,
         "token_symbol": "USD0"
       },
       {
-        "avg_balance_usd": 126392.06855828261,
-        "holder_count": 4168,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 526802141.7509219,
+        "avg_balance_usd": 126787.07366592303,
+        "holder_count": 4155,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 526800291.0819102,
         "token_symbol": "bUSD0"
       },
       {
-        "avg_balance_usd": 2669.217845444213,
-        "holder_count": 159208,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 445217528.9665584,
+        "avg_balance_usd": 2669.4292802663476,
+        "holder_count": 159186,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 445196737.6457004,
         "token_symbol": "UST"
       },
       {
-        "avg_balance_usd": 2298.4979766784977,
-        "holder_count": 156230,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 362505309.8938726,
+        "avg_balance_usd": 2383.385063147897,
+        "holder_count": 158603,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 381651450.16187274,
         "token_symbol": "EURC"
       },
       {
-        "avg_balance_usd": 8794.669656640846,
-        "holder_count": 40860,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 361408154.86999893,
+        "avg_balance_usd": 11140.976314545305,
+        "holder_count": 32361,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 362906162.4699988,
         "token_symbol": "FDUSD"
       },
       {
-        "avg_balance_usd": 840.9983848242567,
-        "holder_count": 386121,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 326437728.06145936,
+        "avg_balance_usd": 841.0291289205429,
+        "holder_count": 386122,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 326443774.3322509,
         "token_symbol": "TUSD"
       },
       {
-        "avg_balance_usd": 62.60568329626928,
-        "holder_count": 5164414,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 325504790.0770434,
+        "avg_balance_usd": 62.61222235630153,
+        "holder_count": 5163915,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 325504790.0770437,
         "token_symbol": "BUSD"
       },
       {
-        "avg_balance_usd": 5253.123639640163,
-        "holder_count": 58246,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 312865537.7296888,
+        "avg_balance_usd": 5258.951062298952,
+        "holder_count": 58179,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 312865516.59828925,
         "token_symbol": "miMATIC"
       },
       {
-        "avg_balance_usd": 18022.216103691375,
-        "holder_count": 16055,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 296068966.15144193,
+        "avg_balance_usd": 18240.459800294462,
+        "holder_count": 16076,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 300019082.7952433,
         "token_symbol": "USDD"
       },
       {
-        "avg_balance_usd": 3294386.492675337,
-        "holder_count": 86,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 283317238.370079,
-        "token_symbol": "M"
-      },
-      {
-        "avg_balance_usd": 44197.44302316896,
-        "holder_count": 5935,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 282819437.9052582,
+        "avg_balance_usd": 44228.67417523023,
+        "holder_count": 5924,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 282930828.6989478,
         "token_symbol": "USDai"
       },
       {
-        "avg_balance_usd": 2428.9082819672985,
-        "holder_count": 102622,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 280774510.67057383,
+        "avg_balance_usd": 2432.822787001015,
+        "holder_count": 102488,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 280774510.6705741,
         "token_symbol": "FRAX"
       },
       {
-        "avg_balance_usd": 483.07740935306913,
-        "holder_count": 429277,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 267944198.9491827,
-        "token_symbol": "MIM"
-      },
-      {
-        "avg_balance_usd": 2290.3376027190975,
-        "holder_count": 116215,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 266171584.49999994,
+        "avg_balance_usd": 2256.437165673395,
+        "holder_count": 117961,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 266171584.49999937,
         "token_symbol": "USD24"
       },
       {
-        "avg_balance_usd": 43653.39536178838,
-        "holder_count": 5364,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 248213206.02712873,
+        "avg_balance_usd": 480.3048578487698,
+        "holder_count": 428686,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 265925587.5965499,
+        "token_symbol": "MIM"
+      },
+      {
+        "avg_balance_usd": 2983486.821822954,
+        "holder_count": 88,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 262546840.32041994,
+        "token_symbol": "M"
+      },
+      {
+        "avg_balance_usd": 43622.21218233368,
+        "holder_count": 5366,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 248210387.31747863,
         "token_symbol": "USX"
       },
       {
-        "avg_balance_usd": 218064.293285126,
-        "holder_count": 994,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 216755907.52541524,
+        "avg_balance_usd": 217626.41317812787,
+        "holder_count": 996,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 216755907.52541536,
         "token_symbol": "USDa"
       },
       {
-        "avg_balance_usd": 1729269.5877006846,
+        "avg_balance_usd": 1729269.5877006839,
         "holder_count": 116,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 200595272.1732794,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 200595272.17327932,
         "token_symbol": "thUSD"
       },
       {
-        "avg_balance_usd": 457.7177721002434,
-        "holder_count": 413331,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 189208168.6063939,
+        "avg_balance_usd": 456.11576803786664,
+        "holder_count": 413308,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 188535452.7184522,
         "token_symbol": "USDA"
       },
       {
-        "avg_balance_usd": 19768.130186020302,
-        "holder_count": 9501,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 187817004.8973789,
+        "avg_balance_usd": 19763.969788212013,
+        "holder_count": 9503,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 187817004.89737877,
         "token_symbol": "HUSD"
       },
       {
-        "avg_balance_usd": 268043.00638475653,
-        "holder_count": 644,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 172619696.1117832,
+        "avg_balance_usd": 256773.57410164413,
+        "holder_count": 658,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 168957011.75888184,
         "token_symbol": "NUSD"
       },
       {
-        "avg_balance_usd": 71651.62129186637,
-        "holder_count": 2090,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 149751888.50000072,
-        "token_symbol": "USAT"
-      },
-      {
-        "avg_balance_usd": 21017.826173233625,
-        "holder_count": 6960,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 148406870.60920262,
+        "avg_balance_usd": 20915.892750295883,
+        "holder_count": 6964,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 147791698.17359072,
         "token_symbol": "EURS"
       },
       {
-        "avg_balance_usd": 1565.303006700839,
-        "holder_count": 87764,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 139002037.6010479,
-        "token_symbol": "DOLA"
+        "avg_balance_usd": 70148.60826959858,
+        "holder_count": 2092,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 146750888.50000024,
+        "token_symbol": "USAT"
       },
       {
-        "avg_balance_usd": 4360.283488676364,
-        "holder_count": 29274,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 130969835.14937194,
+        "avg_balance_usd": 4317.564949276055,
+        "holder_count": 31545,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 139634368.02453688,
         "token_symbol": "AUSD"
       },
       {
-        "avg_balance_usd": 100223.47802192178,
-        "holder_count": 1263,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 126582252.74168721,
-        "token_symbol": "avUSD"
-      },
-      {
-        "avg_balance_usd": 92048.78902272422,
-        "holder_count": 1293,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 119019084.20638241,
-        "token_symbol": "USDX"
-      },
-      {
-        "avg_balance_usd": 2622.155017484649,
-        "holder_count": 45257,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 118670869.62630275,
-        "token_symbol": "USDF"
-      },
-      {
-        "avg_balance_usd": 46074.67772671101,
-        "holder_count": 2446,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 118319772.40219387,
-        "token_symbol": "frxUSD"
-      },
-      {
-        "avg_balance_usd": 37021.30269516736,
-        "holder_count": 2995,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 110878801.57202625,
+        "avg_balance_usd": 42416.767700618766,
+        "holder_count": 2824,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 119784951.9865474,
         "token_symbol": "cUSD"
       },
       {
-        "avg_balance_usd": 59.707029697476514,
-        "holder_count": 1733689,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 106595975.13840967,
+        "avg_balance_usd": 2645.100955836094,
+        "holder_count": 45256,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 119706688.85731827,
+        "token_symbol": "USDF"
+      },
+      {
+        "avg_balance_usd": 91624.16950028852,
+        "holder_count": 1298,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 119019796.1808748,
+        "token_symbol": "USDX"
+      },
+      {
+        "avg_balance_usd": 44181.01140627797,
+        "holder_count": 2546,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 118272567.53460611,
+        "token_symbol": "frxUSD"
+      },
+      {
+        "avg_balance_usd": 89325.53973157363,
+        "holder_count": 1323,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 118177689.06487192,
+        "token_symbol": "avUSD"
+      },
+      {
+        "avg_balance_usd": 59.059401883584286,
+        "holder_count": 1733520,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 105422745.08485258,
         "token_symbol": "USDC.e"
       },
       {
-        "avg_balance_usd": 85900.64100518535,
+        "avg_balance_usd": 85900.64100518548,
         "holder_count": 1197,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 105142384.59034686,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 105142384.59034702,
         "token_symbol": "BEAN"
       },
       {
-        "avg_balance_usd": 4254.9223045950675,
-        "holder_count": 23168,
-        "last_updated_date": "2026-04-17",
-        "market_cap_usd": 98722707.31121476,
+        "avg_balance_usd": 21975.069191192015,
+        "holder_count": 4723,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 103788251.78999989,
+        "token_symbol": "USDH"
+      },
+      {
+        "avg_balance_usd": 4211.481548859778,
+        "holder_count": 22829,
+        "last_updated_date": "2026-04-24",
+        "market_cap_usd": 96295525.61467883,
         "token_symbol": "DUSD"
       }
     ]
