@@ -3,131 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import BitcoinBackground from "@/components/bitcoin-background";
 
-function Sparkle({
-  delay = 0,
-  duration = 1000,
-  peakScale = 1,
-  color = "#CE4C00",
-  top = "50%",
-  left = "50%",
-}: {
-  delay?: number;
-  duration?: number;
-  peakScale?: number;
-  color?: string;
-  top?: string;
-  left?: string;
-}) {
-  return (
-    <span
-      className="pointer-events-none absolute inline-block sparkle-container"
-      style={{
-        top,
-        left,
-        width: 8,
-        height: 8,
-        ["--peak-scale" as string]: peakScale,
-        animationDelay: `${delay}ms`,
-        animationDuration: `${duration}ms`,
-      }}
-    >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        className="sparkle-star"
-      >
-        <path
-          d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"
-          fill={color}
-        />
-      </svg>
-    </span>
-  );
-}
-
-function SparkleText({
-  children,
-  sparkleCount = 6,
-  color = null,
-  className = "",
-}: {
-  children: React.ReactNode;
-  sparkleCount?: number;
-  color?: string | null;
-  className?: string;
-}) {
-  const [sparkles, setSparkles] = useState<
-    Array<{
-      key: string;
-      delay: number;
-      duration: number;
-      peakScale: number;
-      top: string;
-      left: string;
-      color: string;
-      spawnTime: number;
-    }>
-  >([]);
-  const spawnIdRef = useRef(0);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    // Spawn a new sparkle
-    const spawnSparkle = () => {
-      const id = spawnIdRef.current++;
-      const duration = 800 + Math.random() * 1000;
-      const newSparkle = {
-        key: `sparkle-${id}`,
-        delay: 0,
-        duration,
-        peakScale: 0.5 + Math.random() * 1.5,
-        top: `${10 + Math.random() * 60}%`,
-        left: `${5 + Math.random() * 90}%`,
-        color: color || (Math.random() > 0.5 ? "#CE4C00" : "#861F41"),
-        spawnTime: Date.now(),
-      };
-
-      setSparkles(prev => [...prev, newSparkle]);
-
-      // Remove sparkle after animation completes
-      setTimeout(() => {
-        setSparkles(prev => prev.filter(s => s.key !== newSparkle.key));
-      }, duration);
-    };
-
-    // Initial spawn
-    for (let i = 0; i < sparkleCount; i++) {
-      setTimeout(spawnSparkle, Math.random() * 2000);
-    }
-
-    // Continuous spawning
-    const interval = setInterval(() => {
-      spawnSparkle();
-    }, 600);
-
-    return () => clearInterval(interval);
-  }, [sparkleCount, color]);
-
-  return (
-    <span ref={ref} className={`relative inline-block ${className}`}>
-      {children}
-      <span className="pointer-events-none absolute inset-0 overflow-visible">
-        {sparkles.map((sparkle) => (
-          <Sparkle
-            key={sparkle.key}
-            delay={sparkle.delay}
-            duration={sparkle.duration}
-            peakScale={sparkle.peakScale}
-            top={sparkle.top}
-            left={sparkle.left}
-            color={sparkle.color}
-          />
-        ))}
-      </span>
-    </span>
-  );
-}
-
 function FuzzyText({
   text,
   className = "",
@@ -143,28 +18,42 @@ function FuzzyText({
   const [hasStarted, setHasStarted] = useState(false);
   const [opacity, setOpacity] = useState(0);
   const [charWidths, setCharWidths] = useState<number[]>([]);
+  const [revealComplete, setRevealComplete] = useState(false);
   const isRevealedRef = useRef(false);
   const revealedIndicesRef = useRef<Set<number>>(new Set());
   const ref = useRef<HTMLSpanElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  // Measure character widths on mount
+  // Per-glyph boxes break kerning; after the reveal we render the string normally.
+  // Remeasure on resize so scramble phase stays aligned when clamp() font size changes (e.g. fullscreen).
   useEffect(() => {
     if (!measureRef.current) return;
 
-    const widths: number[] = [];
-    for (let i = 0; i < text.length; i++) {
-      if (text[i] === " ") {
-        widths.push(0); // Spaces don't need fixed width
-      } else {
-        // Measure each unique character
-        measureRef.current.textContent = text[i];
-        const width = measureRef.current.getBoundingClientRect().width;
-        widths.push(width);
+    const measure = () => {
+      const el = measureRef.current;
+      if (!el) return;
+      const widths: number[] = [];
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === " ") {
+          widths.push(0);
+        } else {
+          el.textContent = text[i];
+          widths.push(el.getBoundingClientRect().width);
+        }
       }
-    }
-    setCharWidths(widths);
+      setCharWidths(widths);
+    };
+
+    measure();
+
+    const parent = ref.current?.parentElement;
+    if (!parent || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      measure();
+    });
+    ro.observe(parent);
+    return () => ro.disconnect();
   }, [text]);
 
   useEffect(() => {
@@ -192,6 +81,7 @@ function FuzzyText({
     // Reset state for fresh animation
     isRevealedRef.current = false;
     revealedIndicesRef.current.clear();
+    setRevealComplete(false);
     setDisplayText("");
 
     setOpacity(1);
@@ -242,6 +132,7 @@ function FuzzyText({
       } else {
         // Ensure all characters are revealed at the end
         setDisplayText(text);
+        setRevealComplete(true);
         isRevealedRef.current = true;
       }
     };
@@ -281,24 +172,28 @@ function FuzzyText({
           transition: "opacity 0.3s ease-out",
         }}
       >
-        {(displayText || text).split("").map((char, i) => {
-          const width = charWidths[i];
-          if (char === " " || width === undefined || width === 0) {
-            return char === " " ? " " : char;
-          }
-          return (
-            <span
-              key={i}
-              style={{
-                display: "inline-block",
-                width: `${width}px`,
-                textAlign: "center",
-              }}
-            >
-              {char}
-            </span>
-          );
-        })}
+        {revealComplete || !hasStarted ? (
+          text
+        ) : (
+          displayText.split("").map((char, i) => {
+            const width = charWidths[i];
+            if (char === " " || width === undefined || width === 0) {
+              return char === " " ? " " : char;
+            }
+            return (
+              <span
+                key={i}
+                style={{
+                  display: "inline-block",
+                  width: `${width}px`,
+                  textAlign: "center",
+                }}
+              >
+                {char}
+              </span>
+            );
+          })
+        )}
       </span>
     </>
   );
@@ -514,8 +409,8 @@ export default function Home() {
     <div className="relative overflow-hidden pb-24">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(206,76,0,0.12),transparent_35%),radial-gradient(circle_at_85%_18%,rgba(134,31,65,0.12),transparent_34%),radial-gradient(circle_at_60%_65%,rgba(124,24,44,0.09),transparent_42%)]" />
 
-      <header className="sticky top-0 z-40 border-b border-(--line)/1 bg-transparent">
-        <nav className="mx-auto flex w-full max-w-6xl items-center bg-transparent justify-between px-6 py-3 md:px-10 lg:px-14">
+      <header className="sticky top-0 z-40 border-b border-(--line) bg-background">
+        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between bg-background px-6 py-3 md:px-10 lg:px-14">
           <a href="#" className="nav-brand pointer-events-auto">
             VT Blockchain
           </a>
@@ -542,16 +437,16 @@ export default function Home() {
         </nav>
       </header>
 
-      <section className="relative h-[calc(100vh-3.5rem)] overflow-hidden bg-transparent">
+      <section className="relative h-[calc(100dvh-3.5rem)] min-h-0 overflow-hidden bg-transparent">
         <BitcoinBackground />
         <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_20%_20%,rgba(206,76,0,0.07),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(134,31,65,0.08),transparent_42%)]" />
 
-        <div className="pointer-events-none absolute inset-0 z-2 flex -translate-y-4 flex-col items-center justify-center px-8 pb-20 pt-8 md:-translate-y-6 md:pb-18 md:pt-10">
+        <div className="pointer-events-none absolute inset-0 z-2 flex -translate-y-2 flex-col items-center justify-center px-8 pb-20 pt-8 md:-translate-y-3 md:pb-18 md:pt-10 lg:-translate-y-4">
           <div className="mx-auto w-full max-w-6xl text-center">
             <div className="mx-auto flex w-fit items-end gap-3 translate-x-2 md:gap-4 md:translate-x-6">
               <span
                 aria-hidden
-                className="block h-[clamp(4.5rem,11vw,9.8rem)] w-[clamp(4.5rem,11vw,9.8rem)] shrink-0 translate-y-4.5 md:translate-y-5.5"
+                className="block h-[clamp(4.5rem,11vw,9.8rem)] w-[clamp(4.5rem,11vw,9.8rem)] shrink-0 translate-y-6 md:translate-y-7 lg:translate-y-8"
                 style={{
                   backgroundImage:
                     "linear-gradient(135deg, var(--brand-orange) 12%, var(--brand-maroon) 88%)",
@@ -565,21 +460,12 @@ export default function Home() {
                   maskSize: "contain",
                 }}
               />
-              <h1 className="w-fit text-left leading-[0.95]">
+              <h1 className="w-fit max-w-full overflow-visible text-left leading-[0.95]">
                 <span className="block font-[Georgia,Times,serif] text-[clamp(1rem,2.1vw,1.5rem)] font-normal tracking-[0.08em] text-[rgba(134,31,65,0.9)]">
-                  <FuzzyText text="Virginia Tech" scrambleSpeed={40} revealDuration={1200} />
+                  Virginia Tech
                 </span>
-                <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]" style={{ fontFamily: "var(--font-neco), sans-serif" }}>
-                  <SparkleText sparkleCount={4} color="#CE4C00">
-                    <span className="shiny-text">
-                      <FuzzyText text="Block" scrambleSpeed={40} revealDuration={1500} />
-                    </span>
-                  </SparkleText>
-                  <SparkleText sparkleCount={4} color="#861F41">
-                    <span className="shiny-text">
-                      <FuzzyText text="chain" scrambleSpeed={40} revealDuration={1500} />
-                    </span>
-                  </SparkleText>
+                <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight gradient-text-shift" style={{ fontFamily: "Iowan Old Style, Palatino Linotype, Book Antiqua, Georgia, Times New Roman, serif" }}>
+                  Blockchain
                 </span>
               </h1>
             </div>
@@ -587,10 +473,10 @@ export default function Home() {
               STUDENT COLLECTIVE BUILDING A HARD PIPELINE INTO WEB3: DEVELOPMENT, DEFI, RESEARCH, AND SHIP-FAST EXPERIMENTATION.
             </p>
             <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-4">
-              <a href="#projects" className="btn-swipe btn-swipe-maroon">
+              <a href="#projects" className="btn-brutal btn-maroon border border-[#8a0036]">
                 [LEARN MORE]
               </a>
-              <a href="#leadership" className="btn-swipe btn-swipe-orange">
+              <a href="#leadership" className="btn-brutal btn-orange border border-[var(--brand-orange)]">
                 [ABOUT US]
               </a>
             </div>
@@ -598,15 +484,12 @@ export default function Home() {
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-8 z-3 px-6 md:bottom-7 md:px-10 lg:px-14">
-          <div className="mx-auto flex w-full max-w-6xl items-center gap-4 text-(--brand-maroon)">
-            <span className="text-base md:text-lg uppercase tracking-[0.16em] font-normal">
-              <FuzzyText text="[Experiences]" scrambleSpeed={30} revealDuration={800} />
-            </span>
-            <div className="logo-belt flex-1 bg-[rgba(255,255,255,0.62)]">
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="logo-belt">
               <div className="logo-track">
                 {[...partners, ...partners].map((partner, idx) => (
-                  <span key={`${partner.name}-${idx}`} className="logo-chip bg-[rgba(255,255,255,0.78)]">
-                    <img src={partner.logo} alt={`${partner.name} logo`} loading="lazy" decoding="async" />
+                  <span key={`${partner.name}-${idx}`} className="logo-belt-item">
+                    <img src={partner.logo} alt={partner.name} loading="lazy" decoding="async" />
                   </span>
                 ))}
               </div>
@@ -671,7 +554,7 @@ export default function Home() {
         <section className="section-shell border-none !bg-linear-to-r from-[rgba(134,31,65,0.94)] to-[rgba(206,76,0,0.92)] p-8 text-white md:p-10">
           <p className="text-xs uppercase tracking-[0.2em] text-white/80">Our mission</p>
           <h2 className="mt-3 max-w-3xl text-3xl font-medium leading-tight text-white md:text-4xl">
-            Build the strongest student career pipeline into <SparkleText sparkleCount={4}><span className="bg-white px-1 py-0.5 text-[var(--brand-maroon)]">web3</span></SparkleText>.
+            Build the strongest student career pipeline into <span className="bg-white px-1 py-0.5 text-(--brand-maroon)">web3</span>.
           </h2>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-white/90">
             We mentor developers, DeFi researchers, designers, and curious newcomers. Whether you are writing smart contracts or chasing alpha as a proud degen, we turn <AnimatedUnderline className="text-white">curiosity into action</AnimatedUnderline>.
@@ -690,25 +573,23 @@ export default function Home() {
             {projects.map((project) => (
               <article
                 key={project.title}
-                className={`section-shell flex h-full flex-col p-6 group ${
-                  project.title === "Mainstreet Dune" ? "section-shell-theme-hover" : ""
-                }`}
+                className="section-shell flex h-full flex-col p-6"
               >
                 <h3 className="text-xl font-medium text-[#22131a]">{project.title}</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-(--muted)">{project.description}</p>
                 <div className="mt-6 flex gap-3 text-sm font-semibold">
-                  <a 
-                    className={`btn-swipe btn-swipe-orange ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bfb48] group-hover:border-[#2bfb48] transition-colors duration-500" : ""}`} 
-                    href={project.website} 
-                    target="_blank" 
+                  <a
+                    className="btn-brutal btn-orange border border-(--brand-orange)"
+                    href={project.website}
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     [Website]
                   </a>
-                  <a 
-                    className={`btn-swipe btn-swipe-ghost ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bbcfb] group-hover:text-white group-hover:border-[#2bbcfb] transition-colors duration-500" : ""}`} 
-                    href={project.repo} 
-                    target="_blank" 
+                  <a
+                    className="btn-brutal btn-ghost"
+                    href={project.repo}
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     [GitHub]
