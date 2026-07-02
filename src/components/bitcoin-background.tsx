@@ -97,7 +97,7 @@ const cryptoGenerators = [
 ];
 
 const structuralNoise = ["+", "−", "||", "::", "{ }", "[ ]", "Σ", "∫", "⇒", "0x", "11", "π", "Δ"];
-const BACKGROUND_UPSHIFT_PERCENT = 2;
+const BACKGROUND_UPSHIFT_PERCENT = 3;
 
 const extendedCryptoNoise = [
   () => "ECDSA(secp256k1)",
@@ -135,7 +135,7 @@ function estimateBox(text: string, fontSize: string): { width: number; height: n
   return { width, height };
 }
 
-function overlaps(a: PlacementBox, b: PlacementBox, gap = 1.4) {
+function overlaps(a: PlacementBox, b: PlacementBox, gap = 2.5) {
   return !(
     a.left + a.width + gap < b.left ||
     b.left + b.width + gap < a.left ||
@@ -159,30 +159,30 @@ function getScatteredBiasedPosition(width: number, height: number) {
   // More random global scatter, with light side preference.
   if (r < 0.25) {
     return {
-      top: 4 + Math.random() * Math.max(1, 90 - height),
+      top: 8 + Math.random() * Math.max(1, 85 - height),
       left: 1 + Math.random() * Math.max(1, 26 - width),
     };
   }
   if (r < 0.5) {
     return {
-      top: 4 + Math.random() * Math.max(1, 90 - height),
+      top: 8 + Math.random() * Math.max(1, 85 - height),
       left: 73 + Math.random() * Math.max(1, 26 - width),
     };
   }
   if (r < 0.75) {
     return {
-      top: 4 + Math.random() * Math.max(1, 90 - height),
+      top: 8 + Math.random() * Math.max(1, 85 - height),
       left: 2 + Math.random() * Math.max(1, 94 - width),
     };
   }
   if (r < 0.875) {
     return {
-      top: 1 + Math.random() * Math.max(1, 16 - height),
+      top: 6 + Math.random() * Math.max(1, 16 - height),
       left: 2 + Math.random() * Math.max(1, 94 - width),
     };
   }
   return {
-    top: 82 + Math.random() * Math.max(1, 16 - height),
+    top: 80 + Math.random() * Math.max(1, 16 - height),
     left: 2 + Math.random() * Math.max(1, 94 - width),
   };
 }
@@ -230,20 +230,27 @@ function placeWithoutOverlap(
   return null;
 }
 
-function generateNoiseElements(): NoiseElement[] {
+function generateNoiseElements(width: number): NoiseElement[] {
+  const isMobile = width < 575;
   const generatedElements: NoiseElement[] = [];
   const placed: PlacementBox[] = [];
   const usedText = new Set<string>();
   const forbidden: ForbiddenZone[] = [
     // Navbar zone
-    { top: 0 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 18 },
+    { top: 0 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 4 },
     // Main hero content safe area
-    { top: 26 + BACKGROUND_UPSHIFT_PERCENT, left: 20, width: 60, height: 44 },
+    { top: 28 + BACKGROUND_UPSHIFT_PERCENT, left: 20, width: 60, height: 44 },
     // Backed-by belt zone
-    { top: 80 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 20 },
+    { top: 78 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 22 },
   ];
 
-  const macroTerms = shuffledUnique(coreMath).slice(0, 5);
+  // Reduced counts for mobile
+  const macroTermsCount = 0; // Disabled large texts (52-86px) that were causing rendering issues
+  const cryptoTermsCount = isMobile ? 2 : 35;
+  const symbolTermsCount = isMobile ? 2 : 55;
+  const dynamicMathCount = isMobile ? 1 : 4;
+
+  const macroTerms = shuffledUnique(coreMath).slice(0, macroTermsCount);
   for (const generator of macroTerms) {
     const text = generator();
     if (usedText.has(text)) continue;
@@ -256,7 +263,7 @@ function generateNoiseElements(): NoiseElement[] {
       top: pos.top,
       left: pos.left,
       fontSize,
-      opacity: 0.047,
+      opacity: 0.09,
       fontWeight: "bold",
       zIndex: 1,
       isDynamic: true,
@@ -267,7 +274,7 @@ function generateNoiseElements(): NoiseElement[] {
   for (const generator of shuffledUnique(coreMath)) {
     const text = generator();
     if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 320);
+    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 800);
     if (!pos) continue;
     usedText.add(text);
     generatedElements.push({
@@ -283,10 +290,10 @@ function generateNoiseElements(): NoiseElement[] {
     });
   }
 
-  for (const generator of shuffledUnique(dynamicMath).slice(0, 4)) {
+  for (const generator of shuffledUnique(dynamicMath).slice(0, dynamicMathCount)) {
     const text = generator();
     if (usedText.has(text)) continue;
-    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 200);
+    const pos = placeWithoutOverlap(placed, forbidden, text, "16px", 600);
     if (!pos) continue;
     usedText.add(text);
     generatedElements.push({
@@ -302,7 +309,7 @@ function generateNoiseElements(): NoiseElement[] {
     });
   }
 
-  const cryptoTerms = shuffledUnique([...cryptoGenerators, ...extendedCryptoNoise]).slice(0, 35);
+  const cryptoTerms = shuffledUnique([...cryptoGenerators, ...extendedCryptoNoise]).slice(0, cryptoTermsCount);
   for (const generator of cryptoTerms) {
     const text = generator();
     if (usedText.has(text)) continue;
@@ -322,7 +329,7 @@ function generateNoiseElements(): NoiseElement[] {
     });
   }
 
-  const symbolTerms = shuffledUnique(extendedStructuralNoise).slice(0, 55);
+  const symbolTerms = shuffledUnique(extendedStructuralNoise).slice(0, symbolTermsCount);
   for (const text of symbolTerms) {
     if (usedText.has(text)) continue;
     const pos = placeWithoutOverlap(placed, forbidden, text, "10px", 180);
@@ -359,13 +366,13 @@ export default function BitcoinBackground() {
   useEffect(() => {
     const syncFromViewport = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements());
+      setElements(generateNoiseElements(window.innerWidth));
     };
     const frameId = window.requestAnimationFrame(syncFromViewport);
 
     const handleResize = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements());
+      setElements(generateNoiseElements(window.innerWidth));
     };
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -385,7 +392,13 @@ export default function BitcoinBackground() {
     const updateInterval = setInterval(() => {
       elementsRef.current.forEach((el, index) => {
         if (el.isDynamic && el.generator && divRefs.current[index]) {
-          divRefs.current[index]!.textContent = el.generator();
+          const newText = el.generator();
+          const isLatex = newText.includes("\\") || newText.includes("^{") || newText.includes("_{") || newText.includes("\\frac");
+          if (isLatex) {
+            divRefs.current[index]!.innerHTML = katex.renderToString(newText, { throwOnError: false, output: "html", displayMode: true });
+          } else {
+            divRefs.current[index]!.textContent = newText;
+          }
         }
       });
     }, 300);

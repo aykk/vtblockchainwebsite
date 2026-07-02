@@ -37,6 +37,396 @@ html {
   transition: background 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
 }
 
+.section-shell-theme-hover {
+  transition: background 500ms ease, border-color 500ms ease, box-shadow 500ms ease;
+}
+
+.section-shell-theme-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-shell-theme-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(43, 251, 72, 0.15), rgba(43, 188, 251, 0.15));
+  opacity: 0;
+  transition: opacity 500ms ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.section-shell-theme-hover:hover::before {
+  opacity: 1;
+}
+
+.section-shell-theme-hover:hover {
+  border-color: transparent;
+  box-shadow: 0 16px 50px rgba(43, 188, 251, 0.15);
+  transition: border-color 500ms ease, box-shadow 500ms ease;
+}
+
+/* Aerostrategy planetary horizon hover effect */
+.aerostrategy-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.aerostrategy-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Stars in upper section - more scattered */
+    radial-gradient(circle at 10% 8%, rgba(255, 255, 255, 0.95) 1px, transparent 1px),
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 30% 6%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 60% 18%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 70% 7%, rgba(255, 255, 255, 0.85) 1px, transparent 1px),
+    radial-gradient(circle at 80% 16%, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    radial-gradient(circle at 90% 9%, rgba(255, 255, 255, 0.75) 1px, transparent 1px),
+    radial-gradient(circle at 15% 22%, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    radial-gradient(circle at 85% 24%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    /* Multi-colored glow behind text area */
+    radial-gradient(ellipse 70% 50% at 50% 52%, rgba(138, 43, 226, 0.25) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 50% 58%, rgba(50, 205, 50, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 35% at 50% 48%, rgba(43, 188, 251, 0.2) 0%, transparent 45%),
+    /* Main atmospheric gradient with curved horizon using radial gradient */
+    radial-gradient(ellipse 150% 100% at 50% 120%,
+      #0a0f14 0%,
+      #0f1a25 15%,
+      #1a2a3a 28%,
+      #2a4a6a 38%,
+      #3bbcfb 48%,
+      #5fd4e8 55%,
+      #4fc4e8 62%,
+      #2a8ac8 70%,
+      #1a4a7a 78%,
+      #0d1f3a 88%,
+      #0a1628 100%);
+}
+
+.aerostrategy-hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  /* Curved horizon effect */
+  border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+  margin-left: -10%;
+  margin-right: -10%;
+  width: 120%;
+  background:
+    /* Blue-tinted silver streaks and reflections */
+    linear-gradient(90deg,
+      transparent 0%,
+      rgba(100, 130, 160, 0.25) 8%,
+      rgba(120, 160, 190, 0.45) 15%,
+      rgba(100, 130, 160, 0.15) 25%,
+      transparent 35%,
+      rgba(100, 130, 160, 0.35) 45%,
+      rgba(120, 160, 190, 0.25) 55%,
+      transparent 65%,
+      rgba(100, 130, 160, 0.4) 75%,
+      rgba(120, 160, 190, 0.2) 85%,
+      transparent 100%),
+    /* Deep dark blue surface gradient */
+    linear-gradient(180deg,
+      rgba(8, 18, 35, 0) 0%,
+      rgba(6, 14, 28, 0.5) 20%,
+      rgba(4, 10, 22, 0.8) 40%,
+      rgba(3, 8, 18, 0.95) 60%,
+      #020508 100%);
+  box-shadow:
+    0 -2px 10px rgba(60, 100, 140, 0.25),
+    inset 0 5px 15px rgba(43, 100, 160, 0.12);
+}
+
+.aerostrategy-hover:hover::before,
+.aerostrategy-hover:hover::after {
+  opacity: 1;
+}
+
+.aerostrategy-hover:hover {
+  border-color: rgba(43, 188, 251, 0.5);
+  box-shadow:
+    0 20px 60px rgba(10, 22, 40, 0.5),
+    0 0 40px rgba(43, 188, 251, 0.2),
+    inset 0 0 80px rgba(43, 188, 251, 0.08);
+  transition: border-color 800ms ease, box-shadow 800ms ease;
+}
+
+/* Ensure text stays above the background effect */
+.aerostrategy-hover>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text turns white on hover - exclude buttons */
+.aerostrategy-hover:hover h3,
+.aerostrategy-hover:hover .section-kicker,
+.aerostrategy-hover:hover p:not(.btn-brutal):not(.btn-swipe):not(.btn-ghost) {
+  color: #ffffff;
+  transition: color 400ms ease;
+}
+
+/* Buttons adapt to space theme on hover */
+.aerostrategy-hover:hover .btn-swipe-ghost {
+  background: rgba(10, 22, 40, 0.6);
+  border-color: rgba(43, 188, 251, 0.5);
+  color: #ffffff;
+  transition: background-color 800ms ease, border-color 800ms ease, color 800ms ease;
+}
+
+.aerostrategy-hover:hover .btn-swipe-ghost::before {
+  background: rgba(43, 188, 251, 0.3);
+}
+
+.aerostrategy-hover:hover .btn-swipe-orange {
+  background: rgba(10, 30, 60, 0.7);
+  border-color: rgba(43, 188, 251, 0.6);
+  color: #2bbcfb;
+  transition: background-color 800ms ease, border-color 800ms ease, color 800ms ease;
+}
+
+.aerostrategy-hover:hover .btn-swipe-orange::before {
+  background: rgba(43, 188, 251, 0.25);
+}
+
+.aerostrategy-hover:hover .btn-swipe-orange:hover {
+  color: #ffffff;
+}
+
+/* Mainstreet Dune parametric wave / wireframe mesh effect */
+.mainstreet-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.mainstreet-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Uneven vortex contour lines - blue to green sweep */
+    repeating-radial-gradient(ellipse 80% 120% at 30% 50%,
+      transparent 0px,
+      transparent 3px,
+      rgba(43, 108, 176, 0.2) 3px,
+      rgba(43, 108, 176, 0.2) 4px,
+      transparent 4px,
+      transparent 22px),
+    repeating-radial-gradient(ellipse 100% 80% at 70% 60%,
+      transparent 0px,
+      transparent 2px,
+      rgba(56, 161, 105, 0.15) 2px,
+      rgba(56, 161, 105, 0.15) 3px,
+      transparent 3px,
+      transparent 18px),
+    repeating-radial-gradient(ellipse 120% 90% at 50% 40%,
+      transparent 0px,
+      transparent 4px,
+      rgba(66, 153, 225, 0.12) 4px,
+      rgba(66, 153, 225, 0.12) 5px,
+      transparent 5px,
+      transparent 28px),
+    /* Intersecting diagonal sweeps */
+    repeating-linear-gradient(125deg,
+      transparent 0px,
+      transparent 6px,
+      rgba(43, 108, 176, 0.08) 6px,
+      rgba(43, 108, 176, 0.08) 7px,
+      transparent 7px,
+      transparent 32px),
+    repeating-linear-gradient(55deg,
+      transparent 0px,
+      transparent 8px,
+      rgba(47, 133, 90, 0.06) 8px,
+      rgba(47, 133, 90, 0.06) 9px,
+      transparent 9px,
+      transparent 26px),
+    /* White base background */
+    #ffffff;
+}
+
+.mainstreet-hover::after {
+  content: '\0393 \0394 \0398 \03BD';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 1.4rem;
+  color: rgba(43, 108, 176, 0.4);
+  letter-spacing: 2.5em;
+  line-height: 2.5;
+  text-align: center;
+  white-space: pre-wrap;
+  padding: 2rem;
+  background:
+    /* Subtle blue-green glow overlay */
+    radial-gradient(ellipse 70% 50% at 40% 45%, rgba(43, 108, 176, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 70% at 65% 55%, rgba(56, 161, 105, 0.06) 0%, transparent 50%);
+}
+
+.mainstreet-hover:hover::before,
+.mainstreet-hover:hover::after {
+  opacity: 1;
+}
+
+.mainstreet-hover:hover {
+  border-color: rgba(56, 161, 105, 0.4);
+  box-shadow:
+    0 20px 60px rgba(10, 22, 40, 0.12),
+    0 0 40px rgba(56, 161, 105, 0.15),
+    inset 0 0 80px rgba(43, 108, 176, 0.05);
+  transition: border-color 800ms ease, box-shadow 800ms ease;
+}
+
+/* Ensure text stays above the background effect */
+.mainstreet-hover>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text turns dark on hover for contrast against white - exclude buttons */
+.mainstreet-hover:hover h3,
+.mainstreet-hover:hover .section-kicker,
+.mainstreet-hover:hover p:not(.btn-brutal):not(.btn-swipe):not(.btn-ghost) {
+  color: #0a1628;
+  transition: color 400ms ease;
+}
+
+/* Buttons adapt to parametric theme on hover */
+.mainstreet-hover:hover .btn-swipe-ghost {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(43, 108, 176, 0.5);
+  color: #2b6cb0;
+  transition: background-color 800ms ease, border-color 800ms ease, color 800ms ease;
+}
+
+.mainstreet-hover:hover .btn-swipe-ghost::before {
+  background: rgba(43, 108, 176, 0.2);
+}
+
+.mainstreet-hover:hover .btn-swipe-orange {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(56, 161, 105, 0.6);
+  color: #38a169;
+  transition: background-color 800ms ease, border-color 800ms ease, color 800ms ease;
+}
+
+.mainstreet-hover:hover .btn-swipe-orange::before {
+  background: rgba(56, 161, 105, 0.25);
+}
+
+.mainstreet-hover:hover .btn-swipe-orange:hover {
+  color: #2f855a;
+}
+
+/* MEV Uniswap hover effect - grey background, white text, pink buttons */
+.mev-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.mev-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  background: #343434;
+}
+
+.mev-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -29px;
+  right: -29px;
+  width: 240px;
+  height: 240px;
+  opacity: 0;
+  transition: opacity 800ms ease;
+  z-index: 0;
+  pointer-events: none;
+  background: url('/uniswap-uni-logo.svg') no-repeat center center;
+  background-size: contain;
+  filter: blur(5px);
+}
+
+.mev-hover:hover::before,
+.mev-hover:hover::after {
+  opacity: 1;
+}
+
+.mev-hover:hover {
+  border-color: rgba(255, 105, 180, 0.6);
+  box-shadow:
+    0 20px 60px rgba(52, 52, 52, 0.5),
+    0 0 40px rgba(255, 105, 180, 0.6),
+    inset 0 0 60px rgba(255, 105, 180, 0.05);
+  transition: border-color 800ms ease, box-shadow 800ms ease;
+}
+
+/* Ensure text stays above the background effect */
+.mev-hover>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text turns white on hover */
+.mev-hover:hover h3,
+.mev-hover:hover p {
+  color: #ffffff;
+  transition: color 400ms ease;
+}
+
+/* Buttons turn bright pink on hover */
+.mev-hover:hover .btn-swipe-orange,
+.mev-hover:hover .btn-swipe-ghost {
+  background: #ffffff;
+  border-color: #ff69b4;
+  color: #fb2b92;
+  transition: background-color 800ms ease, border-color 800ms ease, color 800ms ease;
+}
+
+.mev-hover:hover .btn-swipe-orange::before,
+.mev-hover:hover .btn-swipe-ghost::before {
+  background: #ff1493;
+}
+
+.mev-hover:hover .btn-swipe-orange:hover,
+.mev-hover:hover .btn-swipe-ghost:hover {
+  background: #ff1493;
+  border-color: #ff1493;
+  color: #ffffff;
+}
+
 .section-kicker {
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -114,6 +504,7 @@ html {
 .btn-swipe {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   z-index: 1;
   padding: 0.72rem 1.1rem;
   font-size: 0.78rem;
@@ -155,6 +546,11 @@ html {
 
 .btn-swipe-orange:hover::before {
   left: -50%;
+}
+
+/* When a .btn-swipe is hovered, trigger glow on parent .btn-swipe-glow */
+.btn-swipe-glow:has(> .btn-swipe:hover)::after {
+  opacity: 0.75;
 }
 
 .btn-swipe-maroon {
@@ -199,10 +595,58 @@ html {
   border: 1px solid var(--line-strong);
 }
 
-.btn-swipe-ghost::before {
-  background: var(--brand-maroon);
+/* ── Glow wrapper (lives OUTSIDE the button's overflow:hidden) ── */
+/* @TODO: MAKE THIS UNDERGLOW WORK PLEASE LOL
+.btn-swipe-glow {
+  position: relative;
+  display: inline-block;
+  pointer-events: none;
 }
 
+.btn-swipe-glow>* {
+  pointer-events: auto;
+}
+
+.btn-swipe-glow::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 8%;
+  right: 8%;
+  height: 45%;
+  z-index: -1;
+  border-radius: 4px;
+  background: linear-gradient(90deg,
+      #a40038 0%,
+      #a83a4f 20%,
+      #c0554e 35%,
+      #d4724a 50%,
+      #c0554e 65%,
+      #a83a4f 80%,
+      #a40038 100%);
+  background-size: 200% auto;
+  filter: blur(12px);
+  opacity: 0;
+  animation: animateGlow 2s linear infinite;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.btn-swipe-glow:hover::after {
+  opacity: 0.75;
+}
+
+@keyframes animateGlow {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+*/
+/* ── Ghost variant ── */
 .btn-swipe-ghost:hover {
   color: #fff;
   border-color: var(--brand-maroon);
@@ -214,47 +658,62 @@ html {
 
 .logo-belt {
   overflow: hidden;
-  border: 0;
-  background: transparent;
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
 .logo-track {
   display: flex;
   width: max-content;
-  align-items: center;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  padding-block: clamp(1rem, 2.5vw, 1.65rem);
-  padding-inline: 0.25rem;
-  animation: belt-scroll 36s linear infinite;
+  gap: 0.9rem;
+  padding: 0.9rem;
+  animation: belt-scroll 28s linear infinite;
 }
 
-.logo-belt-item {
+.logo-chip {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  height: clamp(2rem, 5vw, 3.25rem);
-  width: clamp(6.5rem, 20vw, 11rem);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 85%, white 15%);
+  width: 8.6rem;
+  height: 2.9rem;
+  padding: 0.4rem 0.85rem;
 }
 
-.logo-belt-item img {
-  display: block;
-  width: 100%;
-  height: 100%;
+.logo-chip img {
   max-width: 100%;
+  max-height: 1.7rem;
   object-fit: contain;
-  -webkit-filter: grayscale(100%) saturate(0%) contrast(120%) brightness(42%) !important;
-  filter: grayscale(100%) saturate(0%) contrast(120%) brightness(42%) !important;
-  opacity: 0.9;
+  filter: saturate(1.08) contrast(1.04);
 }
 
 @keyframes belt-scroll {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes sparkle-grow {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(var(--peak-scale, 1)) rotate(180deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
   }
 }
 
@@ -262,30 +721,123 @@ html {
   0% {
     background-position: 200% center;
   }
-  50% {
-    background-position: 0% center;
-  }
+
   100% {
     background-position: -200% center;
   }
 }
 
-/* Moving gradient fill inside headline text (no extra glow layers). */
-.gradient-text-shift {
-  /* Slight inline padding so the last glyph’s sidebearing isn’t clipped under overflow or background-clip. */
-  padding-inline: 0.02em 0.14em;
-  margin-inline-end: -0.02em;
-  background: linear-gradient(
-    90deg,
-    var(--brand-maroon) 0%,
-    #d4724a 22%,
-    var(--brand-orange) 45%,
-    #d4724a 68%,
-    var(--brand-maroon) 100%
-  );
-  background-size: 260% auto;
+.sparkle-container {
+  display: inline-block;
+  animation: sparkle-grow ease-in-out forwards;
+  animation-duration: inherit;
+  animation-delay: inherit;
+}
+
+.sparkle-star {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.shiny-text {
+  background: linear-gradient(90deg,
+      var(--brand-maroon) 0%,
+      #d4724a 25%,
+      #c9a89a 45%,
+      #d4724a 55%,
+      var(--brand-orange) 75%,
+      var(--brand-maroon) 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shine 18s linear infinite;
+  animation: shine 4s linear infinite;
+}
+
+/* ── Join Us button (fully standalone) ── */
+.join-us-btn-shell {
+  position: relative;
+  display: inline-block;
+}
+
+.join-us-btn-shell::after {
+  position: absolute;
+  content: "";
+  inset: 0;
+  z-index: -1;
+  border-radius: 0;
+  transform: scale(1.12) translateZ(0);
+  filter: blur(15px);
+  background: linear-gradient(
+    to left,
+    var(--brand-orange),
+    #b33d00,
+    var(--brand-maroon),
+    #6b1833,
+    #4a0f25,
+    #6b1833,
+    var(--brand-maroon),
+    #b33d00,
+    var(--brand-orange)
+  );
+  background-size: 200% 200%;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.12s ease;
+  animation: join-us-glow 1.25s linear infinite;
+}
+
+.join-us-btn-shell:hover::after {
+  opacity: 1;
+  transform: translate(2px, -2px) scale(1.12) translateZ(0);
+}
+
+.join-us-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: inline-block;
+  padding: 11px 17px;
+  color: #ffffff;
+  border-radius: 0;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--brand-maroon);
+  border: 2px solid var(--brand-maroon);
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.12s ease;
+}
+
+.join-us-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -200%;
+  width: 200%;
+  height: 100%;
+  transform: skewX(-25deg);
+  transition: left 0.8s ease;
+  z-index: -1;
+  background: #ffffff;
+}
+
+.join-us-btn:hover::before {
+  left: -50%;
+}
+
+.join-us-btn:hover {
+  background-color: #ffffff;
+  color: var(--brand-maroon);
+  transform: translate(2px, -2px);
+}
+
+@keyframes join-us-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
 }
