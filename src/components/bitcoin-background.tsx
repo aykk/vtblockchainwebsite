@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
@@ -97,7 +97,6 @@ const cryptoGenerators = [
 ];
 
 const structuralNoise = ["+", "−", "||", "::", "{ }", "[ ]", "Σ", "∫", "⇒", "0x", "11", "π", "Δ"];
-const BACKGROUND_UPSHIFT_PERCENT = 3;
 
 const extendedCryptoNoise = [
   () => "ECDSA(secp256k1)",
@@ -236,19 +235,15 @@ function generateNoiseElements(width: number): NoiseElement[] {
   const placed: PlacementBox[] = [];
   const usedText = new Set<string>();
   const forbidden: ForbiddenZone[] = [
-    // Navbar zone
-    { top: 0 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 4 },
-    // Main hero content safe area
-    { top: 28 + BACKGROUND_UPSHIFT_PERCENT, left: 20, width: 60, height: 44 },
-    // Backed-by belt zone
-    { top: 78 + BACKGROUND_UPSHIFT_PERCENT, left: 0, width: 100, height: 22 },
+    // Keep math/crypto noise out of the centered hero content
+    { top: 18, left: 14, width: 72, height: 58 },
   ];
 
   // Reduced counts for mobile
   const macroTermsCount = 0; // Disabled large texts (52-86px) that were causing rendering issues
-  const cryptoTermsCount = isMobile ? 2 : 35;
-  const symbolTermsCount = isMobile ? 2 : 55;
-  const dynamicMathCount = isMobile ? 1 : 4;
+  const cryptoTermsCount = isMobile ? 12 : 35;
+  const symbolTermsCount = isMobile ? 18 : 55;
+  const dynamicMathCount = isMobile ? 3 : 4;
 
   const macroTerms = shuffledUnique(coreMath).slice(0, macroTermsCount);
   for (const generator of macroTerms) {
@@ -282,7 +277,7 @@ function generateNoiseElements(width: number): NoiseElement[] {
       top: pos.top,
       left: pos.left,
       fontSize: "16px",
-      opacity: 0.67,
+      opacity: 0.78,
       fontWeight: "normal",
       zIndex: 3,
       isDynamic: false,
@@ -321,7 +316,7 @@ function generateNoiseElements(width: number): NoiseElement[] {
       top: pos.top,
       left: pos.left,
       fontSize: "11px",
-      opacity: 0.27 + Math.random() * 0.2,
+      opacity: 0.34 + Math.random() * 0.2,
       fontWeight: "normal",
       zIndex: 2,
       isDynamic: true,
@@ -351,7 +346,7 @@ function generateNoiseElements(width: number): NoiseElement[] {
 }
 
 export default function BitcoinBackground() {
-  const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
+  const containerRef = useRef<HTMLDivElement>(null);
   const [elements, setElements] = useState<NoiseElement[]>([]);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
   const elementsRef = useRef<NoiseElement[]>([]);
@@ -359,21 +354,34 @@ export default function BitcoinBackground() {
 
   useEffect(() => {
     elementsRef.current = elements;
-    // Update refs array size
     divRefs.current = divRefs.current.slice(0, elements.length);
   }, [elements]);
 
-  useEffect(() => {
-    const syncFromViewport = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements(window.innerWidth));
-    };
-    const frameId = window.requestAnimationFrame(syncFromViewport);
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-    const handleResize = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      setElements(generateNoiseElements(window.innerWidth));
+    const syncFromContainer = () => {
+      const { width, height } = container.getBoundingClientRect();
+      const layoutWidth = width || container.parentElement?.clientWidth || window.innerWidth;
+      if (layoutWidth <= 0) return;
+      setElements(generateNoiseElements(layoutWidth));
     };
+
+    syncFromContainer();
+    const retryTimers = [50, 150, 400].map((delay) => window.setTimeout(syncFromContainer, delay));
+    const resizeObserver = new ResizeObserver(syncFromContainer);
+    resizeObserver.observe(container);
+
+    return () => {
+      retryTimers.forEach((timer) => window.clearTimeout(timer));
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
@@ -381,14 +389,14 @@ export default function BitcoinBackground() {
 
     const handlePointerMove = (event: PointerEvent) => {
       if (!shouldAnimateParallax) return;
-      const normX = (event.clientX / window.innerWidth - 0.5) * 2;
-      const normY = (event.clientY / window.innerHeight - 0.5) * 2;
+      const rect = container.getBoundingClientRect();
+      const normX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+      const normY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
       setParallax({ x: normX, y: normY });
     };
 
     const resetParallax = () => setParallax({ x: 0, y: 0 });
 
-    // Update dynamic elements every 0.3 seconds using direct DOM manipulation
     const updateInterval = setInterval(() => {
       elementsRef.current.forEach((el, index) => {
         if (el.isDynamic && el.generator && divRefs.current[index]) {
@@ -406,14 +414,11 @@ export default function BitcoinBackground() {
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerleave", resetParallax);
     window.addEventListener("blur", resetParallax);
-    window.addEventListener("resize", handleResize);
     return () => {
-      window.cancelAnimationFrame(frameId);
       clearInterval(updateInterval);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", resetParallax);
       window.removeEventListener("blur", resetParallax);
-      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -428,20 +433,7 @@ export default function BitcoinBackground() {
   };
 
   return (
-    <div
-      aria-hidden
-      style={{
-        backgroundColor: "#ffffff",
-        width: `${dimensions.width}px`,
-        height: `${dimensions.height}px`,
-        position: "absolute",
-        inset: 0,
-        overflow: "hidden",
-        zIndex: 0,
-        fontFamily: '"SF Mono", "Roboto Mono", Menlo, monospace',
-        transform: `translateY(-${BACKGROUND_UPSHIFT_PERCENT}%)`,
-      }}
-    >
+    <div ref={containerRef} className="hero-math-bg" aria-hidden>
       {elements.map((el, index) => {
         const html = renderContent(el.text);
         return (

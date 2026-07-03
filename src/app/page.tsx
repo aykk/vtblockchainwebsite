@@ -1,130 +1,30 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import BitcoinBackground from "@/components/bitcoin-background";
+import { LandingLoader } from "@/components/landing-loader";
 
-function Sparkle({
-  delay = 0,
-  duration = 1000,
-  peakScale = 1,
-  color = "#CE4C00",
-  top = "50%",
-  left = "50%",
-}: {
-  delay?: number;
-  duration?: number;
-  peakScale?: number;
-  color?: string;
-  top?: string;
-  left?: string;
-}) {
+function DiscordIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <span
-      className="pointer-events-none absolute inline-block sparkle-container"
-      style={{
-        top,
-        left,
-        width: 8,
-        height: 8,
-        ["--peak-scale" as string]: peakScale,
-        animationDelay: `${delay}ms`,
-        animationDuration: `${duration}ms`,
-      }}
-    >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        className="sparkle-star"
-      >
-        <path
-          d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"
-          fill={color}
-        />
-      </svg>
-    </span>
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+    </svg>
   );
 }
 
-function SparkleText({
-  children,
-  sparkleCount = 6,
-  color = null,
-  className = "",
-}: {
-  children: React.ReactNode;
-  sparkleCount?: number;
-  color?: string | null;
-  className?: string;
-}) {
-  const [sparkles, setSparkles] = useState<
-    Array<{
-      key: string;
-      delay: number;
-      duration: number;
-      peakScale: number;
-      top: string;
-      left: string;
-      color: string;
-      spawnTime: number;
-    }>
-  >([]);
-  const spawnIdRef = useRef(0);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    // Spawn a new sparkle
-    const spawnSparkle = () => {
-      const id = spawnIdRef.current++;
-      const duration = 800 + Math.random() * 1000;
-      const newSparkle = {
-        key: `sparkle-${id}`,
-        delay: 0,
-        duration,
-        peakScale: 0.5 + Math.random() * 1.5,
-        top: `${10 + Math.random() * 60}%`,
-        left: `${5 + Math.random() * 90}%`,
-        color: color || (Math.random() > 0.5 ? "#CE4C00" : "#861F41"),
-        spawnTime: Date.now(),
-      };
-
-      setSparkles(prev => [...prev, newSparkle]);
-
-      // Remove sparkle after animation completes
-      setTimeout(() => {
-        setSparkles(prev => prev.filter(s => s.key !== newSparkle.key));
-      }, duration);
-    };
-
-    // Initial spawn
-    for (let i = 0; i < sparkleCount; i++) {
-      setTimeout(spawnSparkle, Math.random() * 2000);
-    }
-
-    // Continuous spawning
-    const interval = setInterval(() => {
-      spawnSparkle();
-    }, 600);
-
-    return () => clearInterval(interval);
-  }, [sparkleCount, color]);
+function SocialIcon({ type, className = "h-4 w-4" }: { type: "x" | "linkedin"; className?: string }) {
+  if (type === "x") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={`${className} fill-current`}>
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    );
+  }
 
   return (
-    <span ref={ref} className={`relative inline-block ${className}`}>
-      {children}
-      <span className="pointer-events-none absolute inset-0 overflow-visible">
-        {sparkles.map((sparkle) => (
-          <Sparkle
-            key={sparkle.key}
-            delay={sparkle.delay}
-            duration={sparkle.duration}
-            peakScale={sparkle.peakScale}
-            top={sparkle.top}
-            left={sparkle.left}
-            color={sparkle.color}
-          />
-        ))}
-      </span>
-    </span>
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={`${className} fill-current`}>
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.126 0 2.063 2.063 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
   );
 }
 
@@ -314,6 +214,87 @@ function FuzzyText({
   );
 }
 
+function HeroDecryptTitle({
+  text,
+  active,
+}: {
+  text: string;
+  active: boolean;
+}) {
+  const decryptChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*0123456789";
+  const hasRunRef = useRef(false);
+  const [displayText, setDisplayText] = useState(text);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    if (!active || hasRunRef.current) return;
+    hasRunRef.current = true;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplayText(text);
+      setRevealed(true);
+      return;
+    }
+
+    const charIndices: number[] = [];
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] !== " ") {
+        charIndices.push(i);
+      }
+    }
+
+    const shuffledIndices = [...charIndices].sort(() => Math.random() - 0.5);
+    const revealDuration = 1400;
+    const revealStartTime = performance.now();
+    let animationId = 0;
+
+    const animate = (currentTime: number) => {
+      const progress = Math.min((currentTime - revealStartTime) / revealDuration, 1);
+      const totalToReveal = Math.floor(progress * shuffledIndices.length);
+      const revealedIndices = new Set(shuffledIndices.slice(0, totalToReveal));
+
+      let result = "";
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === " ") {
+          result += " ";
+        } else if (revealedIndices.has(i) || progress >= 1) {
+          result += text[i];
+        } else {
+          result += decryptChars[Math.floor(Math.random() * decryptChars.length)];
+        }
+      }
+
+      setDisplayText(result);
+
+      if (progress < 1) {
+        animationId = requestAnimationFrame(animate);
+      } else {
+        setDisplayText(text);
+        setRevealed(true);
+      }
+    };
+
+    setDisplayText(
+      text
+        .split("")
+        .map((char) => (char === " " ? " " : decryptChars[Math.floor(Math.random() * decryptChars.length)]))
+        .join("")
+    );
+
+    animationId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, [active, text]);
+
+  return (
+    <span className={revealed ? "flat-hero-title-text flat-hero-title-text--revealed" : "flat-hero-title-text"}>
+      {displayText}
+    </span>
+  );
+}
+
 function useAnimatedNumber(target: number, duration: number = 2000, start: boolean = false) {
   const [value, setValue] = useState(0);
   const animationRef = useRef<number | null>(null);
@@ -459,7 +440,52 @@ function AnimatedUnderline({
   );
 }
 
+function MenuIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2">
+      <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+function CloseIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2">
+      <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
 export default function Home() {
+  const [showLoader, setShowLoader] = useState(true);
+  const [heroReady, setHeroReady] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const navLinks = [
+    { href: "#impact", label: "Impact" },
+    { href: "#travel", label: "Travel" },
+    { href: "#projects", label: "Projects" },
+    { href: "#leadership", label: "Team" },
+  ];
+
+  useEffect(() => {
+    if (!sidebarOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSidebarOpen(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [sidebarOpen]);
+
   const partners = [
     { name: "Avalanche", logo: "/avalanche-avax-logo.svg" },
     { name: "Chainlink", logo: "/chainlink-link-logo.svg" },
@@ -514,116 +540,196 @@ export default function Home() {
   ];
 
   const officers = [
-    { name: "Andrew Kim", role: "Co-President, Web Development", initials: "AK" },
-    { name: "Ted Sha", role: "Co-President, DeFi", initials: "TS" },
-    { name: "Kyler O'Rourke", role: "Co-President, Planning & Development", initials: "KR" },
-    { name: "Andrew C Monte", role: "Professional Advisor", initials: "AM" },
+    {
+      name: "Ted Sha",
+      role: "Co-President, DeFi",
+      image: "/ted.webp",
+      imagePosition: "50% 52%",
+      x: "https://x.com/TedSha7",
+      linkedin: "",
+    },
+    {
+      name: "Kyler O'Rourke",
+      role: "Co-President, Planning & Development",
+      image: "/kyler.webp",
+      imagePosition: "50% 40%",
+      x: "https://x.com/typetwoeng",
+      linkedin: "https://www.linkedin.com/in/kyler-o-rourke-31061b21b/",
+    },
+    {
+      name: "Andrew Kim",
+      role: "Co-President, Web Development",
+      image: "/andrewk.webp",
+      imagePosition: "50% 45%",
+      x: "https://x.com/tanpoporamen",
+      linkedin: "https://www.linkedin.com/in/jungmink623/",
+    },
+    {
+      name: "Andrew C Monte",
+      role: "Professional Advisor",
+      image: "/andrewc.webp",
+      imagePosition: "50% 62%",
+      x: "https://x.com/andrewcmonte",
+      linkedin: "https://www.linkedin.com/in/andrewcmonte/",
+    },
   ];
 
   return (
-    <div className="relative overflow-hidden pb-24">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(206,76,0,0.12),transparent_35%),radial-gradient(circle_at_85%_18%,rgba(134,31,65,0.12),transparent_34%),radial-gradient(circle_at_60%_65%,rgba(124,24,44,0.09),transparent_42%)]" />
+    <>
+      {showLoader && (
+        <LandingLoader
+          onComplete={() => {
+            setShowLoader(false);
+            setHeroReady(true);
+          }}
+        />
+      )}
 
-      <header className="sticky top-0 z-40 border-b border-(--line)/1 bg-transparent">
-        <nav className="mx-auto flex w-full max-w-6xl items-center bg-transparent justify-between px-6 py-3 md:px-10 lg:px-14">
-          <a href="#" className="nav-brand pointer-events-auto">
-            VT Blockchain
+      <div className={`page-shell relative overflow-x-clip${heroReady ? " page-entered" : ""}`}>
+      <div className="page-atmosphere" aria-hidden="true" />
+      <div className="page-lens-wrap">
+      <section className={`flat-hero${heroReady ? " flat-hero--ready" : ""}`}>
+        <header className="flat-topbar">
+          <div className="flat-topbar-social">
+            <a
+              href="https://discord.gg/mHC2nbT2me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flat-social-link"
+              aria-label="Join our Discord"
+            >
+              <DiscordIcon className="" />
+            </a>
+            <a
+              href="https://x.com/vtblockchain"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flat-social-link"
+              aria-label="Follow us on X"
+            >
+              <SocialIcon type="x" className="" />
+            </a>
+          </div>
+
+          <a href="/" className="flat-topbar-brand" aria-label="Virginia Tech Blockchain home">
+            <Image
+              src="/vtblogo-transparent.webp"
+              alt=""
+              width={112}
+              height={112}
+              className="flat-brand-logo"
+              priority
+            />
           </a>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-3 sm:flex">
-              <a className="nav-link pointer-events-auto" href="#impact">
-                Impact
+          <nav className="flat-topbar-nav" aria-label="Primary">
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href}>
+                {link.label}
               </a>
-              <a className="nav-link pointer-events-auto" href="#travel">
-                Travel
-              </a>
-              <a className="nav-link pointer-events-auto" href="#projects">
-                Projects
-              </a>
-              <a className="nav-link pointer-events-auto" href="#leadership">
-                Team
-              </a>
-            </div>
-            {/*@TODO: Fix/add underglow*/}
-            <span className="join-us-btn-shell ml-2 pointer-events-auto">
-              <a
-                href="https://discord.gg/H8sJTxWHnE"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="join-us-btn"
-              >
-                Join Us
-              </a>
-            </span>
-          </div>
-        </nav>
-      </header>
+            ))}
+          </nav>
 
-      <section className="relative h-[calc(100vh-3.5rem)] overflow-hidden bg-transparent">
-        <BitcoinBackground />
-        <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_20%_20%,rgba(206,76,0,0.07),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(134,31,65,0.08),transparent_42%)]" />
+          <button
+            type="button"
+            className="flat-topbar-menu-btn"
+            aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+            aria-expanded={sidebarOpen}
+            aria-controls="flat-sidebar-panel"
+            onClick={() => setSidebarOpen((open) => !open)}
+          >
+            <MenuIcon className="flat-menu-icon" />
+          </button>
+        </header>
 
-        <div className="pointer-events-none absolute inset-0 z-2 flex -translate-y-4 flex-col items-center justify-center px-8 pb-20 pt-8 md:-translate-y-6 md:pb-18 md:pt-10">
-          <div className="mx-auto w-full max-w-6xl text-center">
-            <div className="mx-auto flex w-fit items-end gap-3 translate-x-2 md:gap-4 md:translate-x-6">
-              <span
-                aria-hidden
-                className="block h-[clamp(4.5rem,11vw,9.8rem)] w-[clamp(4.5rem,11vw,9.8rem)] shrink-0 translate-y-4.5 md:translate-y-5.5"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(135deg, var(--brand-orange) 12%, var(--brand-maroon) 88%)",
-                  WebkitMaskImage: "url('/vtlogo.svg')",
-                  maskImage: "url('/vtlogo.svg')",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskPosition: "center",
-                  maskPosition: "center",
-                  WebkitMaskSize: "contain",
-                  maskSize: "contain",
-                }}
-              />
-              <h1 className="w-fit text-left leading-[0.95]">
-                <span className="block font-[Georgia,Times,serif] text-[clamp(1rem,2.1vw,1.5rem)] font-normal tracking-[0.08em] text-[rgba(134,31,65,0.9)]">
-                  <FuzzyText text="Virginia Tech" scrambleSpeed={600} revealDuration={1100} />
-                </span>
-                <span className="relative block text-[clamp(2.2rem,8vw,6.2rem)] font-normal tracking-tight drop-shadow-[0_4px_12px_rgba(206,76,0,0.32)]" style={{ fontFamily: "var(--font-neco), sans-serif" }}>
-                  <SparkleText sparkleCount={4} color="#CE4C00">
-                    <span className="shiny-text">
-                      <FuzzyText text="Block" scrambleSpeed={600} revealDuration={1100} />
-                    </span>
-                  </SparkleText>
-                  <SparkleText sparkleCount={4} color="#861F41">
-                    <span className="shiny-text">
-                      <FuzzyText text="chain" scrambleSpeed={600} revealDuration={1100} />
-                    </span>
-                  </SparkleText>
-                </span>
-              </h1>
+        <h1 className="flat-hero-title">
+          [<HeroDecryptTitle text="VT BLOCKCHAIN" active={heroReady} />]
+        </h1>
+
+        <div className="flat-hero-hokie">
+          <Image
+            src="/pudgyhokie-transparent.png?v=13"
+            alt="Virginia Tech Hokie mascot"
+            width={1020}
+            height={1020}
+            className="flat-hokie-img"
+            priority
+            unoptimized
+          />
+        </div>
+
+        <div className="flat-hero-scroll" aria-hidden="true">
+          <span className="flat-scroll-line" />
+          SCROLL
+        </div>
+      </section>
+
+      <section className="flat-section flat-section--mission-statement" aria-label="Mission statement">
+        <div className="flat-section-inner flat-mission-statement-wrap">
+          <p className="flat-mission-statement">
+            Building the next generation of{" "}
+            <strong>founders, developers, and degens</strong> on the blockchain at
+            Virginia Tech.
+          </p>
+        </div>
+      </section>
+
+      <section id="impact" className="flat-section flat-section--white">
+        <div className="flat-section-inner space-y-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="space-y-2">
+              <p className="section-kicker">Impact</p>
+              <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Student impact at protocol scale.</h2>
             </div>
-            <p className="mx-auto mb-8 mt-6 max-w-3xl text-center text-sm leading-relaxed text-black md:text-lg">
-              STUDENT COLLECTIVE BUILDING A HARD PIPELINE INTO WEB3: DEVELOPMENT, DEFI, RESEARCH, AND SHIP-FAST EXPERIMENTATION.
+            <p className="flat-muted max-w-md text-sm leading-relaxed">
+              Trading and investing through research, strategy, and student-led deployments.
             </p>
-            <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-4">
-              <a href="#projects" className="btn-swipe btn-swipe-maroon">
-                [LEARN MORE]
-              </a>
-              <a href="#leadership" className="btn-swipe btn-swipe-orange">
-                [ABOUT US]
-              </a>
+          </div>
+          <div className="flat-divider pt-5">
+            <p className="flat-stat text-5xl font-medium md:text-6xl">
+              <AnimatedNumber value={8.55} prefix="$" suffix="m+" decimals={2} />
+            </p>
+            <p className="flat-stat-caption mt-1 text-sm">
+              Cumulative personal on-chain volume
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3 md:max-w-lg">
+            <div className="stat-cell px-4 py-4">
+              <p className="flat-stat-label text-xs font-semibold tracking-wide">Protocols</p>
+              <p className="mt-2 text-3xl font-medium">
+                <AnimatedNumber value={20} suffix="+" decimals={0} showSuffixAtTarget={true} />
+              </p>
+            </div>
+            <div className="stat-cell px-4 py-4">
+              <p className="flat-stat-label text-xs font-semibold tracking-wide">Chains Covered</p>
+              <p className="mt-2 text-3xl font-medium">
+                <AnimatedNumber value={10} suffix="+" decimals={0} showSuffixAtTarget={true} />
+              </p>
+            </div>
+          </div>
+          <div className="flat-divider pt-5">
+            <p className="flat-stat text-5xl font-medium md:text-6xl">
+              <AnimatedNumber value={10} prefix="$" suffix="b+" decimals={0} />
+            </p>
+            <p className="flat-stat-caption mt-1 text-sm">
+              Volume routed through our contracts
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-10 md:gap-12">
+              <img src="/kwenta.svg" alt="Kwenta" className="flat-partner-logo h-8 w-auto" />
+              <img src="/aerostrat.svg" alt="Aerostrategy" className="flat-partner-logo h-8 w-auto" />
             </div>
           </div>
         </div>
+      </section>
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-8 z-3 px-6 md:bottom-7 md:px-10 lg:px-14">
-          <div className="mx-auto flex w-full max-w-6xl items-center gap-4 text-(--brand-maroon)">
-            <span className="text-base md:text-lg uppercase tracking-[0.16em] font-normal">
-              <FuzzyText text="[Active on]" scrambleSpeed={30} revealDuration={800} />
-            </span>
-            <div className="logo-belt flex-1 bg-[rgba(255,255,255,0.62)]">
+      <section className="flat-section flat-section--belt">
+        <div className="hero-belt">
+          <div className="hero-belt-inner">
+            <span className="hero-belt-label">[Active on]</span>
+            <div className="logo-belt flex-1">
               <div className="logo-track">
                 {[...partners, ...partners].map((partner, idx) => (
-                  <span key={`${partner.name}-${idx}`} className="logo-chip bg-[rgba(255,255,255,0.78)]">
+                  <span key={`${partner.name}-${idx}`} className="logo-chip">
                     <img src={partner.logo} alt={`${partner.name} logo`} loading="lazy" decoding="async" />
                   </span>
                 ))}
@@ -633,152 +739,186 @@ export default function Home() {
         </div>
       </section>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 pt-16 md:px-10 lg:px-14">
-        <section id="impact" className="section-shell relative p-6 md:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-6">
-            <div className="space-y-2">
-              <p className="section-kicker">Impact</p>
-              <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Student impact at protocol scale.</h2>
-            </div>
-            <p className="max-w-md text-sm leading-relaxed text-(--muted)">
-              Trading and investing through research, strategy, and student-led deployments.
-            </p>
-          </div>
-          <div className="mt-6 border-t border-(--line) pt-6">
-            <p className="text-5xl font-medium text-(--brand-maroon) md:text-6xl">
-              <AnimatedNumber value={8.55} prefix="$" suffix="m+" decimals={2} />
-            </p>
-            <p className="mt-1 text-sm text-(--brand-maroon)/60">
-              Cumulative personal on-chain volume
-            </p>
-          </div>
-          <div className="mt-7 grid grid-cols-2 gap-3 md:max-w-lg">
-            <div className="border border-(--line) bg-background px-4 py-5">
-              <p className="text-xs uppercase tracking-[0.15em] text-(--muted)">Protocols</p>
-              <p className="mt-2 text-3xl font-medium">
-                <AnimatedNumber value={20} suffix="+" decimals={0} showSuffixAtTarget={true} />
-              </p>
-            </div>
-            <div className="border border-(--line) bg-background px-4 py-5">
-              <p className="text-xs uppercase tracking-[0.15em] text-(--muted)">Chains Covered</p>
-              <p className="mt-2 text-3xl font-medium">
-                <AnimatedNumber value={10} suffix="+" decimals={0} showSuffixAtTarget={true} />
-              </p>
-            </div>
-          </div>
-          <div className="mt-6 border-t border-(--line) pt-6">
-            <p className="text-5xl font-medium text-(--brand-maroon) md:text-6xl">
-              <AnimatedNumber value={10} prefix="$" suffix="b+" decimals={0} />
-            </p>
-            <p className="mt-1 text-sm text-(--brand-maroon)/60">
-              Volume routed through our contracts
-            </p>
-            <div className="mt-4 flex flex-wrap items-center gap-4">
-              <img src="/kwenta.svg" alt="Kwenta" className="h-8 w-auto" />
-              <img src="/aerostrat.svg" alt="Aerostrategy" className="h-8 w-auto" />
-            </div>
-          </div>
-        </section>
-
-        <section id="travel" className="space-y-6">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
+      <section id="travel" className="flat-section flat-section--white">
+        <div className="flat-section-inner space-y-4">
+          <div className="section-divider flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="section-kicker">Travel</p>
               <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Conferences Attended</h2>
             </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-3">
             {travels.map((stop) => (
-              <article key={stop.event} className="section-shell p-6 transition hover:-translate-y-1">
-                <p className="text-xs uppercase tracking-[0.2em] text-(--brand-orange)">{stop.short}</p>
-                <h3 className="mt-2 text-xl font-medium text-[#211319]">{stop.event}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-(--muted)">{stop.note}</p>
+              <article key={stop.event} className="flat-card p-5 transition-shadow hover:shadow-[0_10px_28px_rgba(232,85,29,0.12)]">
+                <p className="text-xs font-semibold tracking-wide text-(--brand-orange)">{stop.short}</p>
+                <h3 className="flat-card-title mt-2 text-xl font-medium">{stop.event}</h3>
+                <p className="flat-muted mt-3 text-sm leading-relaxed">{stop.note}</p>
               </article>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="section-shell border-none !bg-linear-to-r from-[rgba(134,31,65,0.94)] to-[rgba(206,76,0,0.92)] p-8 text-white md:p-10">
-          <p className="text-xs uppercase tracking-[0.2em] text-white/80">Our mission</p>
-          <h2 className="mt-3 max-w-3xl text-3xl font-medium leading-tight text-white md:text-4xl">
-            Build the strongest student career pipeline into <SparkleText sparkleCount={4}><span className="bg-white px-1 py-0.5 text-[var(--brand-maroon)]">web3</span></SparkleText>.
+      <section className="flat-section flat-section--maroon">
+        <div className="flat-section-inner">
+          <p className="section-kicker">Our mission</p>
+          <h2 className="mt-3 max-w-3xl text-3xl font-medium leading-tight md:text-4xl">
+            Build the strongest student career pipeline into <span className="flat-mission-pill">web3</span>.
           </h2>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-white/90">
-            We mentor developers, DeFi researchers, designers, and curious newcomers. Whether you are writing smart contracts or chasing alpha as a proud degen, we turn <AnimatedUnderline className="text-white">curiosity into action</AnimatedUnderline>.
+          <p className="flat-muted mt-4 max-w-3xl text-base leading-relaxed">
+            Our goal is to collect developers, DeFi researchers, designers, and curious newcomers at Virginia Tech. Whether you are writing smart contracts or chasing alpha as a proud degen, we want to turn <AnimatedUnderline>curiosity into action</AnimatedUnderline>, and open up opportunities for students who are interested in the Web3 space.
           </p>
-        </section>
+        </div>
+      </section>
 
-        <section id="projects" className="space-y-6">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
+      <section id="projects" className="flat-section flat-section--white">
+        <div className="flat-section-inner space-y-4">
+          <div className="section-divider flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="section-kicker">Projects</p>
               <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Data Analysis, MEV, etc.</h2>
             </div>
-            <p className="max-w-sm text-sm text-(--muted)">Built by members and published for portfolio-ready <strong>PoW.</strong></p>
+            <p className="flat-muted max-w-sm text-sm">Built by members and published for portfolio-ready <strong>PoW.</strong></p>
           </div>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-3">
             {projects.map((project) => (
               <article
                 key={project.title}
-                className={`section-shell flex h-full flex-col p-6 group ${project.title === "Mainstreet Dune" ? "mainstreet-hover" : ""
+                className={`flat-card flex h-full flex-col p-5 group ${project.title === "Mainstreet Dune" ? "mainstreet-hover" : ""
                   } ${project.title === "Aerostrategy" ? "aerostrategy-hover" : ""} ${project.title === "MEV Uniswap Fee Extractor" ? "mev-hover" : ""
                   }`}
               >
-                <h3 className="text-xl font-medium text-[#22131a]">{project.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-(--muted)">{project.description}</p>
-                <div className="mt-6 flex gap-3 text-sm font-semibold">
+                <h3 className="flat-card-title text-xl font-medium">{project.title}</h3>
+                <p className="flat-muted mt-3 flex-1 text-sm leading-relaxed">{project.description}</p>
+                <div className="mt-6 flex gap-2.5">
                   <a
-                    className={`btn-swipe btn-swipe-orange ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bfb48] group-hover:border-[#2bfb48] transition-colors duration-500" : ""}`}
+                    className={`btn btn-accent ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bfb48] group-hover:border-[#2bfb48] transition-colors duration-500" : ""}`}
                     href={project.website}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    [Website]
+                    Website
                   </a>
                   <a
-                    className={`btn-swipe btn-swipe-ghost ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bbcfb] group-hover:text-white group-hover:border-[#2bbcfb] transition-colors duration-500" : ""}`}
+                    className={`btn btn-outline ${project.title === "Mainstreet Dune" ? "group-hover:bg-[#2bbcfb] group-hover:text-white group-hover:border-[#2bbcfb] transition-colors duration-500" : ""}`}
                     href={project.repo}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    [GitHub]
+                    GitHub
                   </a>
                 </div>
               </article>
             ))}
           </div>
-          <div className="flex flex-col items-start gap-0 pt-2 pl-2">
-            <svg className="h-4 w-4 text-(--brand-orange)" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 19V5M5 12l7-7 7 7" />
-            </svg>
-            <span className="text-sm font-medium text-(--brand-maroon)">Hover us!</span>
-          </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="leadership" className="space-y-6">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--line) pb-4">
+      <section id="leadership" className="flat-section flat-section--maroon">
+        <div className="flat-section-inner space-y-4">
+          <div className="section-divider flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="section-kicker">Leadership</p>
               <h2 className="section-title" style={{ fontFamily: "var(--font-neco), sans-serif" }}>Meet the team</h2>
             </div>
-            <p className="text-sm text-(--muted)">4 officers currently leading VT Blockchain.</p>
+            <p className="flat-muted text-sm">4 officers currently leading VT Blockchain.</p>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {officers.map((officer) => (
-              <article key={officer.name} className="section-shell p-5">
-                <div className="mb-4 flex h-32 w-full items-center justify-center border border-(--line) bg-linear-to-br from-[rgba(134,31,65,0.16)] to-[rgba(206,76,0,0.2)] text-3xl font-medium text-(--brand-maroon)">
-                  {officer.initials}
+              <article key={officer.name} className="flat-card flex h-full flex-col overflow-hidden p-5">
+                <div className="flat-team-photo flat-team-photo--light relative mb-4 aspect-[4/5] w-full overflow-hidden">
+                  <Image
+                    src={officer.image}
+                    alt={officer.name}
+                    fill
+                    className="object-cover"
+                    style={{ objectPosition: officer.imagePosition }}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
                 </div>
-                <h3 className="text-lg font-medium">{officer.name}</h3>
-                <p className="text-sm text-(--muted)">{officer.role}</p>
+                <div className="flex flex-1 flex-col">
+                  <h3 className="text-lg font-medium">{officer.name}</h3>
+                  <p className="flat-muted mt-1 flex-1 text-sm leading-relaxed">{officer.role}</p>
+                  <div className="team-socials">
+                    {officer.x ? (
+                      <a
+                        href={officer.x}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="team-social-link"
+                        aria-label={`${officer.name} on X`}
+                      >
+                        <SocialIcon type="x" />
+                      </a>
+                    ) : (
+                      <span className="team-social-link team-social-link--pending" aria-label={`${officer.name} on X, link coming soon`}>
+                        <SocialIcon type="x" />
+                      </span>
+                    )}
+                    {officer.linkedin ? (
+                      <a
+                        href={officer.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="team-social-link"
+                        aria-label={`${officer.name} on LinkedIn`}
+                      >
+                        <SocialIcon type="linkedin" />
+                      </a>
+                    ) : (
+                      <span className="team-social-link team-social-link--pending" aria-label={`${officer.name} on LinkedIn, link coming soon`}>
+                        <SocialIcon type="linkedin" />
+                      </span>
+                    )}
+                  </div>
+                </div>
               </article>
             ))}
           </div>
-          <p className="text-xs text-(--muted)">
-            Replace initials cards with real headshots by swapping each card with a Next `Image` component.
-          </p>
-        </section>
-      </main>
+        </div>
+      </section>
+      </div>
     </div>
+
+    <div className={`flat-sidebar${sidebarOpen ? " flat-sidebar--open" : ""}`} aria-hidden={!sidebarOpen}>
+      <button
+        type="button"
+        className="flat-sidebar-backdrop"
+        aria-label="Close menu"
+        tabIndex={sidebarOpen ? 0 : -1}
+        onClick={() => setSidebarOpen(false)}
+      />
+      <aside
+        id="flat-sidebar-panel"
+        className="flat-sidebar-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site navigation"
+      >
+        <div className="flat-sidebar-header">
+          <span className="flat-sidebar-label">Menu</span>
+          <button
+            type="button"
+            className="flat-sidebar-close"
+            aria-label="Close menu"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <CloseIcon className="flat-menu-icon" />
+          </button>
+        </div>
+        <nav className="flat-sidebar-nav" aria-label="Mobile primary">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setSidebarOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </aside>
+    </div>
+    </>
   );
 }

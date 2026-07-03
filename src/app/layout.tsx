@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono, VT323 } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -11,6 +11,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const vt323 = VT323({
+  variable: "--font-vt323",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const neco = localFont({
@@ -41,8 +48,17 @@ const neco = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "VT Blockchain",
+  title: "Virginia Tech Blockchain",
   description: "Virginia Tech Blockchain student organization website",
+  icons: {
+    apple: "/pudgyhokie-transparent.png",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -53,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${neco.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${neco.variable} ${vt323.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
