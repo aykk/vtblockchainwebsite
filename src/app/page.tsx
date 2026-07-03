@@ -565,7 +565,7 @@ export default function Home() {
       linkedin: "https://www.linkedin.com/in/jungmink623/",
     },
     {
-      name: "Andrew C Monte",
+      name: "Andrew Chiaramonte",
       role: "Professional Advisor",
       image: "/andrewc.webp",
       imagePosition: "50% 62%",
