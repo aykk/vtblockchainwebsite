@@ -519,7 +519,7 @@ export default function Home() {
     {
       title: "Mainstreet Dune",
       description:
-        "Analytics dashboard tracking over $40 million dollars in assets, updated daily.",
+        "Analytics dashboard tracking over $70 million dollars in assets, updated daily.",
       website: "https://dune.com/jungt/mainstreet",
       repo: "https://github.com/Ungter/Mainstreet_DUNE",
     },
@@ -712,11 +712,11 @@ export default function Home() {
               <AnimatedNumber value={10} prefix="$" suffix="b+" decimals={0} />
             </p>
             <p className="flat-stat-caption mt-1 text-sm">
-              Volume routed through our contracts
+              Volume routed through our contracts:
             </p>
-            <div className="mt-4 flex flex-wrap items-center gap-10 md:gap-12">
-              <img src="/kwenta.svg" alt="Kwenta" className="flat-partner-logo h-8 w-auto" />
-              <img src="/aerostrat.svg" alt="Aerostrategy" className="flat-partner-logo h-8 w-auto" />
+            <div className="flat-impact-partners flex flex-wrap items-end gap-10 md:gap-12">
+              <img src="/kwenta.svg" alt="Kwenta" className="flat-partner-logo flat-partner-logo--impact h-8 w-auto" />
+              <img src="/aerostrat.svg" alt="Aerostrategy" className="flat-partner-logo flat-partner-logo--impact h-8 w-auto" />
             </div>
           </div>
         </div>

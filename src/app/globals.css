@@ -928,6 +928,15 @@ section[id] {
   opacity: 0.92;
 }
 
+.flat-impact-partners {
+  margin-top: 2.75rem;
+}
+
+.flat-impact-partners .flat-partner-logo--impact {
+  display: block;
+  margin-top: 25px;
+}
+
 .flat-section--orange .flat-card:hover,
 .flat-section--maroon .flat-card:hover {
   border-color: rgba(232, 85, 29, 0.4);
