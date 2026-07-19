@@ -1,122 +1,122 @@
 {
-  "timestamp": "2026-07-12T02:02:59.751Z",
+  "timestamp": "2026-07-19T02:03:07.925Z",
   "summary": {
     "totalStablecoins": 50,
-    "totalMarketcapUsd": 206628116927.412,
-    "totalHolders": 149683770,
-    "totalTransferVolume7d": 1054936995620.3657,
-    "totalTransfers7d": 375007335,
-    "avgTransferUsd": 2813.110297216895
+    "totalMarketcapUsd": 221847459629.33414,
+    "totalHolders": 177742449,
+    "totalTransferVolume7d": 973327237477.6434,
+    "totalTransfers7d": 359914157,
+    "avgTransferUsd": 2704.331626159522
   },
   "topStablecoins": [
     {
       "symbol": "USDT",
-      "marketCap": 111186994587.03967,
-      "holders": 97209351
+      "marketCap": 109396190884.63321,
+      "holders": 89350921
     },
     {
       "symbol": "USDC",
-      "marketCap": 61740419652.9679,
-      "holders": 34398607
+      "marketCap": 68016071768.73508,
+      "holders": 39054425
     },
     {
       "symbol": "USDS",
-      "marketCap": 7333547805.733793,
-      "holders": 17096
+      "marketCap": 6517493618.489868,
+      "holders": 55663
     },
     {
       "symbol": "DAI",
-      "marketCap": 5320332995.92266,
-      "holders": 5397430
+      "marketCap": 5296376049.663089,
+      "holders": 5863956
     },
     {
       "symbol": "USDe",
-      "marketCap": 4013214774.4743643,
-      "holders": 124797
+      "marketCap": 4719268412.796185,
+      "holders": 176676
     },
     {
       "symbol": "USD1",
-      "marketCap": 3415880937.2086225,
-      "holders": 524770
+      "marketCap": 3211819856.69771,
+      "holders": 530308
     },
     {
-      "symbol": "crvUSD",
-      "marketCap": 2089909204.9493291,
-      "holders": 95816
+      "symbol": "USDG",
+      "marketCap": 2290081563.328051,
+      "holders": 83952
     },
     {
       "symbol": "PYUSD",
-      "marketCap": 1903099653.6083086,
-      "holders": 91535
+      "marketCap": 2203362215.699127,
+      "holders": 94206
     },
     {
-      "symbol": "USDt",
-      "marketCap": 1847205574.0475059,
-      "holders": 1201918
+      "symbol": "USDT0",
+      "marketCap": 2161305598.4832096,
+      "holders": 8765199
     },
     {
-      "symbol": "RLUSD",
-      "marketCap": 675927108.428057,
-      "holders": 13486
+      "symbol": "crvUSD",
+      "marketCap": 2089809204.9493332,
+      "holders": 95833
     }
   ],
   "topChains": [
     {
       "blockchain": "ethereum",
-      "volume": 572063152634.9403,
-      "transfers": 10372086
+      "volume": 522021041362.2567,
+      "transfers": 10878312
     },
     {
       "blockchain": "base",
-      "volume": 337735594163.1018,
-      "transfers": 21448140
+      "volume": 304614267466.3468,
+      "transfers": 23223484
     },
     {
       "blockchain": "bnb",
-      "volume": 46306857873.457,
-      "transfers": 106198745
-    },
-    {
-      "blockchain": "polygon",
-      "volume": 29482908627.659355,
-      "transfers": 156403619
+      "volume": 44676289929.578865,
+      "transfers": 103351096
     },
     {
       "blockchain": "optimism",
-      "volume": 27204761915.478676,
-      "transfers": 5257550
+      "volume": 35135175195.066376,
+      "transfers": 5725607
+    },
+    {
+      "blockchain": "polygon",
+      "volume": 25673156634.97371,
+      "transfers": 143275305
     },
     {
       "blockchain": "arbitrum",
-      "volume": 12563870572.540342,
-      "transfers": 10330171
+      "volume": 13555968982.338526,
+      "transfers": 8903139
     },
     {
       "blockchain": "hyperevm",
-      "volume": 9163587123.762486,
-      "transfers": 1522415
+      "volume": 9880865755.273058,
+      "transfers": 1558560
     },
     {
       "blockchain": "avalanche_c",
-      "volume": 4963425538.049195,
-      "transfers": 2132498
+      "volume": 4467832963.611639,
+      "transfers": 2764447
     },
     {
       "blockchain": "plasma",
-      "volume": 4083297217.4777317,
-      "transfers": 724984
+      "volume": 3604768196.319646,
+      "transfers": 643533
     },
     {
       "blockchain": "monad",
-      "volume": 3104629231.70678,
-      "transfers": 1675601
+      "volume": 3364738478.544609,
+      "transfers": 1240030
     }
   ],
   "metadata": {
-    "marketcapLastUpdated": "2026-07-11",
+    "marketcapLastUpdated": "2026-07-18",
     "transfersPeriod": {
-      "first": "2026-07-05 00:00:01.000 UTC",
-      "last": "2026-07-12 00:14:57.000 UTC"
+      "first": "2026-07-12 00:00:01.000 UTC",
+      "last": "2026-07-19 00:11:47.000 UTC"
     }
   }
 }
